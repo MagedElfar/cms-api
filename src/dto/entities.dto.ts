@@ -1,6 +1,6 @@
-import { COLUMN_TYPE } from "../services/dynamicModel.services";
+import { COLUMN_TYPE } from "../services/entities.services";
 
-export class CreateModelDto {
+export class CreateEntitiesDto {
     name: string
 }
 

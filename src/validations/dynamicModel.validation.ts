@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { COLUMN_TYPE } from "../services/dynamicModel.services";
+import { COLUMN_TYPE } from "../services/entities.services";
 
 const createModelSchema = Joi.object({
 
