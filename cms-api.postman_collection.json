@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3af49f9e-2282-4858-968f-29230f501c96",
+		"_postman_id": "38dcbd45-9838-434e-a90a-084735039959",
 		"name": "cms-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "18389212"
@@ -200,13 +200,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users/4",
+							"raw": "{{url}}/users/6",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"4"
+								"6"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get user.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | string |"
@@ -219,7 +219,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users?limit=9&page=1",
+							"raw": "{{url}}/users?limit=9&page=2&email=maged.me@gmail.com",
 							"host": [
 								"{{url}}"
 							],
@@ -233,7 +233,7 @@
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "name",
@@ -242,8 +242,7 @@
 								},
 								{
 									"key": "email",
-									"value": "m",
-									"disabled": true
+									"value": "maged.me@gmail.com"
 								}
 							]
 						},
@@ -368,13 +367,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users/7",
+							"raw": "{{url}}/users/9",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"7"
+								"9"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete user.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |"
@@ -414,7 +413,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"book\"\r\n}",
+							"raw": "{\r\n    \"name\": \"course\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -441,7 +440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"books\",\r\n    \"newName\": \"users\"\r\n}",
+							"raw": "{\r\n    \"entity\": \"student\",\r\n    \"newName\": \"students\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -467,16 +466,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/entities/borrow",
+							"raw": "{{url}}/entities/customer",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"entities",
-								"borrow"
+								"customer"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for drop or delete an exist entity\n\n## EndPoint:\n\n##### /api/entities/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity.  <br>ex: \"borrow\" | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for drop or delete an exist entity\n\n## EndPoint:\n\n##### /api/entities/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity. | true | string |"
 					},
 					"response": []
 				},
@@ -494,7 +493,7 @@
 								"entities"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all entities\n\n## EndPoint:\n\n##### /api/entities\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity.  <br>ex: \"borrow\" | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all entities\n\n## EndPoint:\n\n##### /api/entities"
 					},
 					"response": []
 				}
@@ -511,7 +510,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"borrow\",\r\n    \"attribute\": [\r\n     \r\n        {\r\n            \"name\": \"BookID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\": \"book\"\r\n        },\r\n        {\r\n            \"name\": \"CustomerID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"customer\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"entity\": \"course_attendee\",\r\n    \"attribute\": [\r\n     \r\n        {\r\n            \"name\": \"studentID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"students\"\r\n        },\r\n         {\r\n            \"name\": \"courseID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"course\"\r\n        },\r\n        {\r\n            \"name\": \"score\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -538,7 +537,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"books\",\r\n    \"attribute\": \"Author\",\r\n    \"newName\":\"author\"\r\n}",
+							"raw": "{\r\n    \"entity\": \"students\",\r\n    \"attribute\": \"Name\",\r\n    \"newName\":\"name\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -565,14 +564,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/attributes/student/userId",
+							"raw": "{{url}}/attributes/course/courseID",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"attributes",
-								"student",
-								"userId"
+								"course",
+								"courseID"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete attribute from a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity/:attribute\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | attribute name | true | string |"
@@ -585,13 +584,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/attributes/books",
+							"raw": "{{url}}/attributes/students",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"attributes",
-								"books"
+								"students"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get attributes for a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |"
@@ -611,7 +610,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"CustomerID\": \"4\",\r\n    \"BookID\": \"1\"\r\n}",
+							"raw": "{\r\n    \"name\": \"math\",\r\n    \"startDate\": \"2023-02-14\",\r\n    \"endDate\":\"2024-04-09\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -619,13 +618,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/model/borrow",
+							"raw": "{{url}}/model/course",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"borrow"
+								"course"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create a new record for a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
@@ -639,7 +638,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Birthdate\": \"2000-10-22\"\r\n}",
+							"raw": "{\r\n    \"grade\": 89,\r\n    \"birthdate\": \"2023-1-04\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -647,14 +646,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/model/customer/2",
+							"raw": "{{url}}/model/students/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"customer",
-								"2"
+								"students",
+								"3"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
@@ -667,14 +666,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/borrow/6",
+							"raw": "{{url}}/model/students/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"borrow",
-								"6"
+								"students",
+								"3"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
@@ -687,18 +686,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/borrow?limit=4&page=1",
+							"raw": "{{url}}/model/course_attendee?limit=2&page=2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"borrow"
+								"course_attendee"
 							],
 							"query": [
 								{
 									"key": "limit",
-									"value": "4"
+									"value": "2"
 								},
 								{
 									"key": "name",
@@ -707,7 +706,7 @@
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						},
@@ -721,14 +720,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/customer/2",
+							"raw": "{{url}}/model/course_attendee/4",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"customer",
-								"2"
+								"course_attendee",
+								"4"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
@@ -736,7 +735,7 @@
 					"response": []
 				}
 			],
-			"description": "API manages dynamic entity records CRUD opreations"
+			"description": "API endpoints manages dynamic entity records CRUD opreations"
 		}
 	],
 	"auth": {
