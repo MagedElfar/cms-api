@@ -1,12 +1,20 @@
 ## Description
 
-It is a basic e-commerce system build with Node.js, Express.js & MySQL.
+It is a basic CMS system allow users to mange there system by create dynamic entities and custom attributes .
 
-using sequelize as ORM.
+## Main Tools
 
-API documentation using swagger:
+- Node.js
 
-ex: [http://localhost:5000/api-docs/](http://localhost:5000/api-docs/)
+- Express.js
+
+- MySQL DB
+
+- TypeScript
+
+- Sequelize: ORM
+
+- Nodemailer: Sending email services
 
 ## Installation
 
@@ -34,17 +42,11 @@ $ npm run build
 $ npm start
 ```
 
-## Test
-
-### Unit tests
-
-```bash
-$ npm run test
-```
-
 ## Database Migration
 
 ### Migration
+
+script to run database migration
 
 ```bash
 $ npm run migration
@@ -54,7 +56,8 @@ $ npm run migration
 
 PORT: require port for running app ex: 5000.
 
-ENCRYPTION_KEY: key used for ENCRYPTION process in system "it depended on ENCRYPTION algorithm".
+ENCRYPTION_KEY: key used for ENCRYPTION process in system "it depended on ENCRYPTION algorithm"
+test ex:0f4f6baad4efb4bb7b144e1bf5ca7066.
 
 DB_DATABASE: Database name.
 
@@ -73,9 +76,3 @@ JWT_EXPIRE: jwt expire.
 GOOGLE_USER: gmail address "used for mail services configuration".
 
 GOOGLE_PASSWORD: password for google services "not gmail password and used for mail services configuration"
-
-CLOUD_API_KEY: cloudinary "API KEY".
-
-CLOUD_API_SECRET: cloudinary "API secret".
-
-CLOUD_NAME: cloudinary "Cloud Name"
