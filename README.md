@@ -16,6 +16,8 @@ It is a basic CMS system allow users to mange there system by create dynamic ent
 
 - Nodemailer: Sending email services
 
+- Winston: used for system logging
+
 ## Installation
 
 ```bash
