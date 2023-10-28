@@ -58,4 +58,18 @@ export default class EntitiesController {
         }
 
     }
+
+    async updateEntitiesHandler(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            await this.entitiesServices.updatedEntity(req.body);
+
+            sendResponse(res, {}, 200)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
 }

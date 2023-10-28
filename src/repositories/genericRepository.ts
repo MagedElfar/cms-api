@@ -12,6 +12,14 @@ export interface FindManyOptions<T extends Model> {
     limit?: number;
 }
 
+export class GetManyDto {
+    data: any
+    options: {
+        limit: number,
+        page: number
+    }
+}
+
 export default abstract class GenericRepository<T extends Model, I> {
 
     protected model: ModelStatic<T>
@@ -62,41 +70,42 @@ export default abstract class GenericRepository<T extends Model, I> {
 
     // ... other methods ...
 
-    public async findMany(options: FindManyOptions<T> = {}): Promise<{ count: number, data: I[] }> {
+    public async findMany(getManyDto: GetManyDto): Promise<{ count: number, records: I[] }> {
         try {
-            const queryOptions: FindOptions = {};
-
-            if (options.where && Object.keys(options.where).length > 0) {
-                queryOptions.where = options.where;
-            }
-
-            if (options.order) {
-                queryOptions.order = options.order
-            }
-
-            if (options.offset !== undefined) {
-                queryOptions.offset = options.offset;
-            }
-
-            if (options.limit !== undefined) {
-                queryOptions.limit = options.limit;
-            }
-
-            const models = await this.model.findAll(queryOptions);
-
-            const count = await this.model.count({
-                where: queryOptions.where,
+            const data = await this.model.findAll({
+                where: getManyDto.data,
+                limit: getManyDto.options.limit,
+                offset: (getManyDto.options.page - 1) * getManyDto.options.limit,
             });
 
-            const data = models.map((model) => model.dataValues);
+            const count = await this.model.count({
+                where: getManyDto.data,
+            });
 
-            return { count, data }
+            const records = data.map((model) => model.dataValues);
+
+            return { count, records }
         } catch (error: any) {
             this.logger.error("database error", null, error);
             throw new InternalServerError("database error");
         }
     }
 
+    public async getCount(data: WhereOptions<Attributes<T>>): Promise<number> {
+        try {
+
+
+            const count = await this.model.count({
+                where: data
+            });
+
+
+            return count
+        } catch (error: any) {
+            this.logger.error("database error", null, error);
+            throw new InternalServerError("database error");
+        }
+    }
     public async update(id: number, updates: Partial<T>): Promise<I | null> {
         try {
             const updateOptions: UpdateOptions = {

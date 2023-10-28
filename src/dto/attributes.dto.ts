@@ -17,6 +17,12 @@ export class RemoveAttributeDto {
     attribute: string
 }
 
+export class RenameAttributeDto {
+    entity: string
+    attribute: string
+    newName: string
+}
+
 export class GetAttributeDto {
     entity: string
 }

@@ -36,9 +36,25 @@ const createSchema = Joi.object({
 
     role: Joi.string().required().valid(...Object.values(Roles)),
 
+
+})
+
+const getManySchema = Joi.object({
+
+    name: Joi.string().optional(),
+
+    email: Joi.string().optional(),
+    page: Joi.number().min(1).optional(),
+    limit: Joi.number().when('page', {
+        is: Joi.exist(),
+        then: Joi.required(),
+        otherwise: Joi.optional()
+    })
+
 })
 export {
     updateSchema,
     updateUserRoleSchema,
-    createSchema
+    createSchema,
+    getManySchema
 }

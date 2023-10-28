@@ -31,6 +31,13 @@ attributesRouter.delete(
     attributesController.removeAttributeHandler.bind(attributesController)
 )
 
+attributesRouter.put(
+    "/rename",
+    permissionMiddleware,
+    validation(attributeValidation.renameAttributeSchema),
+    attributesController.renameAttributeHandler.bind(attributesController)
+)
+
 attributesRouter.get(
     "/:entity",
     validation(attributeValidation.getAttributeSchema, "param"),

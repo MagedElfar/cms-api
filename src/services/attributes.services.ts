@@ -2,7 +2,7 @@ import { ILogger } from "../utility/logger";
 import databaseConfig, { DatabaseConfig } from "../db";
 import { BadRequestError, ForbiddenError } from "../utility/errors";
 import { DataTypes } from "sequelize";
-import { CreateAttributesDto, GetAttributeDto, RemoveAttributeDto } from "../dto/attributes.dto";
+import { CreateAttributesDto, GetAttributeDto, RemoveAttributeDto, RenameAttributeDto } from "../dto/attributes.dto";
 import { IEntitiesServices } from "./entities.services";
 
 export enum COLUMN_TYPE {
@@ -30,6 +30,7 @@ export interface IAttributesServices {
     createAttributes(createAttributesDto: CreateAttributesDto): Promise<void>
     getColumns(getAttributeDto: GetAttributeDto): Promise<IAttr[]>
     removeAttribute(removeAttributeDto: RemoveAttributeDto): Promise<void>
+    renameAttribute(renameAttributeDto: RenameAttributeDto): Promise<void>
 }
 
 export default class AttributesServices implements IAttributesServices {
@@ -205,6 +206,35 @@ export default class AttributesServices implements IAttributesServices {
             const queryInterface = databaseConfig.sequelize.getQueryInterface();
 
             await queryInterface.removeColumn(entity, attribute)
+
+
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async renameAttribute(renameAttributeDto: RenameAttributeDto): Promise<void> {
+        try {
+            const { entity, attribute, newName } = renameAttributeDto
+
+            //check if table exist in database
+            const tables = await this.entitiesServices.getEntities()
+            if (!tables.includes(entity))
+                throw new BadRequestError(`Entities "${entity}" is not exist`)
+
+            const columns = await this.getColumns({ entity })
+
+            //check if column exist
+            if (!columns.some(item => item.name === attribute))
+                throw new BadRequestError(`attribute "${attribute}" is not exist in this entity`);
+
+            //check if there any other column has same name
+            if (columns.some(item => item.name === newName))
+                throw new BadRequestError(`attribute "${newName}" is already exist in this entity`);
+
+            const queryInterface = databaseConfig.sequelize.getQueryInterface();
+
+            await queryInterface.renameColumn(entity, attribute, newName)
 
 
         } catch (error) {

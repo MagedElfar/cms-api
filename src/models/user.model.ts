@@ -51,6 +51,7 @@ User.init(
         },
         role: {
             type: DataTypes.ENUM(...Object.values(Roles)),
+            defaultValue: Roles.Operator,
             allowNull: false
         }
 

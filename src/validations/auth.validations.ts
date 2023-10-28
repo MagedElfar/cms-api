@@ -21,9 +21,6 @@ const signupSchema = Joi.object({
         .messages({
             "string.email": "invalid email format"
         }),
-
-    role: Joi.string().required().valid(...Object.values(Roles)),
-
 })
 
 

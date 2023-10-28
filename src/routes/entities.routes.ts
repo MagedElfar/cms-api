@@ -31,4 +31,11 @@ entitiesRouter.delete(
     entitiesController.dropEntitiesHandler.bind(entitiesController)
 )
 
+entitiesRouter.put(
+    "/",
+    permissionMiddleware,
+    validation(entitiesValidation.updateEntitySchema),
+    entitiesController.updateEntitiesHandler.bind(entitiesController)
+)
+
 export default entitiesRouter;

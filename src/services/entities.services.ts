@@ -1,5 +1,5 @@
 import { ILogger } from "../utility/logger";
-import { CreateEntitiesDto } from "../dto/entities.dto";
+import { CreateEntitiesDto, UpdatedEntityDto } from "../dto/entities.dto";
 import databaseConfig, { DatabaseConfig } from "../db";
 import { BadRequestError, NotFoundError } from "../utility/errors";
 import { DataTypes, ModelAttributes } from "sequelize";
@@ -9,6 +9,7 @@ export interface IEntitiesServices {
     createEntities(createEntitiesDto: CreateEntitiesDto): Promise<void>;
     getEntities(): Promise<string[]>;
     dropEntity(entityName: string): Promise<void>
+    updatedEntity(updatedEntityDto: UpdatedEntityDto): Promise<void>
 }
 
 export default class EntitiesServices implements IEntitiesServices {
@@ -100,6 +101,29 @@ export default class EntitiesServices implements IEntitiesServices {
             await queryInterface.dropTable(tableName)
 
             return;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async updatedEntity(updatedEntityDto: UpdatedEntityDto) {
+        try {
+            const tables = await this.getEntities()
+
+            //check if Entities is already exist
+            if (!tables.includes(updatedEntityDto.entity))
+                throw new NotFoundError(`table ${updatedEntityDto.entity} is not exist`)
+
+            //check  if there an Entities has same name 
+            if (tables.includes(updatedEntityDto.newName))
+                throw new NotFoundError(`table ${updatedEntityDto.newName} is already exist`)
+
+            const queryInterface = databaseConfig.sequelize.getQueryInterface();
+
+            await queryInterface.renameTable(updatedEntityDto.entity, updatedEntityDto.newName)
+
+            return;
+
         } catch (error) {
             throw error
         }

@@ -1,5 +1,6 @@
 import { CreateUserDto, UpdateUserDto } from "../dto/user.dto";
 import { UserAttributes } from "../models/user.model";
+import { GetManyDto } from "../repositories/genericRepository";
 import UserRepository from "../repositories/user.repository";
 import { BadRequestError, NotFoundError } from "../utility/errors";
 import * as bcrypt from "bcrypt";
@@ -8,10 +9,12 @@ export interface IUserServices {
     createUser(createUserDto: CreateUserDto): Promise<UserAttributes>;
     findUserById(id: number): Promise<UserAttributes | null>;
     findOne(data: Partial<UserAttributes>): Promise<UserAttributes | null>;
+    findMany(getManyDto: GetManyDto): Promise<any>
     updateOne(id: number, updateUserDto: UpdateUserDto): Promise<UserAttributes | null>;
     updateUser(id: number, updateUserDto: UpdateUserDto): Promise<UserAttributes | null>
     updateUserRole(id: number, updateUserDto: UpdateUserDto): Promise<UserAttributes | null>
     deleteUser(id: number): Promise<number>;
+    countUser(data?: Partial<UserAttributes>): Promise<number>
 }
 
 export default class UserServices implements IUserServices {
@@ -68,6 +71,17 @@ export default class UserServices implements IUserServices {
         }
     }
 
+    async findMany(getManyDto: GetManyDto): Promise<any> {
+        try {
+            const data = await this.userRepository.findMany(getManyDto)
+
+            return data;
+        } catch (error) {
+            throw error
+        }
+    }
+
+
     async updateUser(id: number, updateUserDto: UpdateUserDto) {
         try {
             const user = await this.findUserById(id);
@@ -99,6 +113,8 @@ export default class UserServices implements IUserServices {
         }
     }
 
+
+
     async updateOne(id: number, updateUserDto: UpdateUserDto) {
         try {
             return await this.userRepository.update(id, updateUserDto)
@@ -112,6 +128,16 @@ export default class UserServices implements IUserServices {
             const isDeleted = await this.userRepository.delete({ id })
 
             return isDeleted;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async countUser(data: Partial<UserAttributes> = {}): Promise<number> {
+        try {
+            const count = await this.userRepository.getCount(data)
+
+            return count;
         } catch (error) {
             throw error
         }

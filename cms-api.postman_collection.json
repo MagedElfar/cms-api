@@ -1,0 +1,779 @@
+{
+	"info": {
+		"_postman_id": "3af49f9e-2282-4858-968f-29230f501c96",
+		"name": "cms-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18389212"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"maged92\",\r\n    \"email\": \"maged.me@gmail.com\",\r\n    \"password\": \"123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for signup into system.\n\n## EndPoint:\n\n##### /api/auth/signup\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | user name | true | string |\n| email | user email | true | string |\n| password | user password | true | string |\n\n#### Note:\n\nfirst user will register will register as admin after that will register as operator"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"maged.1992.me@gmail.com\",\r\n    \"password\": \"maged@1992\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for login into system.\n\n## EndPoint:\n\n##### /api/auth/login\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| password | user password | true | string |\n| email | user email | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjkyODA3MjYzLCJleHAiOjE2OTI4OTM2NjN9.bPHt6AB-FpcqXdjiUYWuTl-yVGwXJ5PSEWGl8x-Go1E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"0e6ca5c79ac9abcc9eea946ef2f4da77:9f19c3fe166926643761c944a41c03094c8ff0fc6b2d195d8390953d63e0600ff03024f486ec1a346e84ec952eb14936ad4bbc7b9ad2c5f6fe0c901cdc6a9f79e2d40b92fa34002b55b8f32715ba9bd34e38345dd675d04d15c3caddfc64810cacb90aef03e32acbf240a54c35dc6a0066e38af4e58aadb95eb8118606becf339ad580c31d4ba4ec5819281836ba4a2c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for logout from system.\n\n## EndPoint:\n\n##### /api/auth/logout\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| token | refreshToken | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"6aecbcc75a2266827686edfabb64a5b7:030b1791f8364eefcf82442e26eff80ae33bf5bf65146b6fbb618efd3db16f7b7d53d8f74bacac55680c1389cfbefa155fbab8e0e1b582c233b979f9ecc4a2ada7f2367df10963f50d111714d74556ca76698f4a643691fdc25a86d187fd908ef372172c79b8f58bb0b9e52c5ecd53e8a3480ada7c7dc3c1a98c3760e350aaa51938475bd32f281fb2fba93010736390\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/refresh-token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for generate new accessToken.\n\n## EndPoint:\n\n##### /api/auth/refresh-token\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| token | refreshToken | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "rest-password-email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"maged.1992.me@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/rest-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"rest-password"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for send rest password email.\n\n## EndPoint:\n\n##### /api/auth/rest-password\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| email | user email | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "rest-password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/rest-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjk4NTIwNjg1LCJleHAiOjE2OTg1MjE1ODV9.pa1vry7CHRk9IPlEKy7ZF6KHCO31jF4-1ZMqhEtEUGs).",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"rest-password",
+								"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjk4NTIwNjg1LCJleHAiOjE2OTg1MjE1ODV9.pa1vry7CHRk9IPlEKy7ZF6KHCO31jF4-1ZMqhEtEUGs)."
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for rest password.\n\n## EndPoint:\n\n##### /api/auth/rest-password/:token\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| token | rest password  <br>token gnreated from send email | true | string |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| password | new password | true | string |"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication API"
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get-user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"4"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get user.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "get-users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users?limit=9&page=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "9"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "maged92",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "m",
+									"disabled": true
+								}
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used get many users\n\n## EndPoint:\n\n##### /api/users\n\n## Request query:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| limit | records number ber requset.  <br>defulte = 10 | false | number |\n| page | page number.  <br>defulte = 1 | false | number |\n| name | user name | false | string |\n| email | user email | false | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "update-user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"maged.1992.me@gmail.com\",\r\n    \"name\": \"maged\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update crruent user data.\n\n## EndPoint:\n\n##### /api/users\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | user name | false | string |\n| email | user email | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"maged99\",\r\n    \"email\": \"maged99@gmail.com\",\r\n    \"password\": \"12345789\",\r\n    \"role\": \"operator\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create a new user.\n\n## EndPoint:\n\n##### /api/users\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | user name | true | string |\n| email | user email | true | string |\n| password | user password | true | string |\n| role | user role  <br>valid values (  <br>admin ,operator  <br>) | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "update-user-admin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"mail@gmail.com\",\r\n    \"name\": \"Maged Mohammed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/14",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"14"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update user data.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | user name | false | string |\n| email | user email | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "update-user-role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/role/7",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"role",
+								"7"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update user role.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| role | user role  <br>valid values (  <br>admin ,operator  <br>)e | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/7",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"7"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete user.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |"
+					},
+					"response": []
+				}
+			],
+			"description": "API manages dynamic users records CRUD opreations",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Entities",
+			"item": [
+				{
+					"name": "create entitie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"book\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/entities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create a new entity\n\n## EndPoint:\n\n##### /api/entities\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | the entity name | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "update entity",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entity\": \"books\",\r\n    \"newName\": \"users\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/entities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for rename an exist entity\n\n## EndPoint:\n\n##### /api/entities\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the current entity | true | string |\n| newName | entity new name | true | true |"
+					},
+					"response": []
+				},
+				{
+					"name": "drop entity",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/entities/borrow",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities",
+								"borrow"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for drop or delete an exist entity\n\n## EndPoint:\n\n##### /api/entities/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity.  <br>ex: \"borrow\" | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "get entities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/entities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all entities\n\n## EndPoint:\n\n##### /api/entities\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity.  <br>ex: \"borrow\" | true | string |"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for \"Etities\""
+		},
+		{
+			"name": "Attributes",
+			"item": [
+				{
+					"name": "create attributes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entity\": \"borrow\",\r\n    \"attribute\": [\r\n     \r\n        {\r\n            \"name\": \"BookID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\": \"book\"\r\n        },\r\n        {\r\n            \"name\": \"CustomerID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"customer\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/attributes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"attributes"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create or assign new attributes to a specific entity\n\n## EndPoint:\n\n##### /api/attributes\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | lest of attributes object options | true | array |\n| type | attribute option.  <br>valid values : (  <br>STRING, INTEGER,  <br>FLOAT,  <br>DATE  <br>BOOLEAN  <br>) | true | string |\n| required | attribute option.  <br>set of this attribute will be required or not | true | boolean |\n| name | attribute option.  <br>name of the attribute | true | string |\n| ref | attribute option.  <br>name of the reference entity.  <br>used for set reference entity \"foreign Key\" | false | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "rename attribute",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entity\": \"books\",\r\n    \"attribute\": \"Author\",\r\n    \"newName\":\"author\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/attributes/rename",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"attributes",
+								"rename"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create or assign new attributes to a specific entity\n\n## EndPoint:\n\n##### /api/attributes/rename\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | attribute name | true | string |\n| newName | new attribute name | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "delete attributes",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/attributes/student/userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"attributes",
+								"student",
+								"userId"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete attribute from a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity/:attribute\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | attribute name | true | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "get attributes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/attributes/books",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"attributes",
+								"books"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get attributes for a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for \"Attributes\""
+		},
+		{
+			"name": "Model",
+			"item": [
+				{
+					"name": "create record",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"CustomerID\": \"4\",\r\n    \"BookID\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/model/borrow",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"model",
+								"borrow"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create a new record for a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
+					},
+					"response": []
+				},
+				{
+					"name": "update record",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Birthdate\": \"2000-10-22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/model/customer/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"model",
+								"customer",
+								"2"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
+					},
+					"response": []
+				},
+				{
+					"name": "get record by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/model/borrow/6",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"model",
+								"borrow",
+								"6"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
+					},
+					"response": []
+				},
+				{
+					"name": "get many records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/model/borrow?limit=4&page=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"model",
+								"borrow"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "4"
+								},
+								{
+									"key": "name",
+									"value": "maged elfar",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get many records form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n\n## Request query:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| limit | records number ber requset.  <br>defulte = 10 | false | number |\n| page | page number.  <br>defulte = 1 | false | number |\n\n#### Notes:\n\nyou can use entity custom attrubites as request query param to fillter results"
+					},
+					"response": []
+				},
+				{
+					"name": "delete record",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/model/customer/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"model",
+								"customer",
+								"2"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
+					},
+					"response": []
+				}
+			],
+			"description": "API manages dynamic entity records CRUD opreations"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjk4NDk4Mjg5LCJleHAiOjE2OTg1ODQ2ODl9.z3Sms-_Z3Z9AsA0beAzxbPjIEFK_0UrDJLVoRGEev-M",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:5000/api",
+			"type": "string"
+		}
+	]
+}

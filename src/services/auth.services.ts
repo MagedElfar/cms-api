@@ -1,4 +1,4 @@
-import { UserAttributes } from './../models/user.model';
+import { Roles, UserAttributes } from './../models/user.model';
 import { RestPasswordDto } from './../dto/auth.dto';
 import config from "../config";
 import { LoginDto, SignupDto } from "../dto/auth.dto";
@@ -51,7 +51,16 @@ export default class AuthServices implements IAuthServices {
     }> {
         try {
 
-            const user = await this.userServices.createUser(signupDto)
+            const count = await this.userServices.countUser()
+
+            let role = Roles.Operator;
+
+            if (count === 0) role = Roles.ADMIN
+
+            const user = await this.userServices.createUser({
+                ...signupDto,
+                role
+            })
 
             const accessToken: string = this.jwtServices.createToken({ id: user.id }, config.jwt.expire)
 

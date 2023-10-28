@@ -43,6 +43,20 @@ export default class AttributesController {
         }
     }
 
+    async renameAttributeHandler(req: Request, res: Response, next: NextFunction) {
+        try {
+
+            await this.attributesServices.renameAttribute(req.body);
+
+            sendResponse(res, {
+                message: "attribute is renamed successfully"
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
     async getAttributeHandler(req: Request, res: Response, next: NextFunction) {
         try {
 
@@ -51,7 +65,10 @@ export default class AttributesController {
             const attributes = await this.attributesServices.getColumns({ entity });
 
             sendResponse(res, {
-                attributes
+                data: {
+                    entity,
+                    attributes
+                }
             }, 200)
 
         } catch (error) {

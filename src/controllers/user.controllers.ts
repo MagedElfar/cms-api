@@ -34,6 +34,30 @@ export class UserController {
 
     }
 
+    async getUsersHandler(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            const { limit = 10, page = 1, ...others } = req.query
+
+            const data = await this.userServices.findMany({
+                data: others,
+                options: {
+                    limit: +limit,
+                    page: +page
+                }
+            })
+
+            sendResponse(res, {
+                data
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
     async createUserHandler(req: Request, res: Response, next: NextFunction) {
 
         try {

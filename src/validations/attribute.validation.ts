@@ -39,6 +39,12 @@ const removeAttributeSchema = Joi.object({
     attribute: Joi.string().disallow('id', 'createdAt', 'updatedAt').required(),
 })
 
+const renameAttributeSchema = Joi.object({
+    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
+    attribute: Joi.string().disallow('id', 'createdAt', 'updatedAt').required(),
+    newName: Joi.string().required(),
+})
+
 const getAttributeSchema = Joi.object({
     entity: Joi.string().disallow('refresh_token_list', 'users').required(),
 })
@@ -47,5 +53,6 @@ const getAttributeSchema = Joi.object({
 export {
     createAttributeSchema,
     removeAttributeSchema,
-    getAttributeSchema
+    getAttributeSchema,
+    renameAttributeSchema
 }

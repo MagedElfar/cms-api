@@ -10,6 +10,13 @@ const userRouter = Router();
 
 const userController: UserController = userDIContainer.resolve(Dependencies.UserController)
 
+
+userRouter.get(
+    "/",
+    validation(userValidation.getManySchema, "query"),
+    userController.getUsersHandler.bind(userController)
+)
+
 userRouter.get(
     "/:id",
     userController.getUserByIdHandler.bind(userController)
