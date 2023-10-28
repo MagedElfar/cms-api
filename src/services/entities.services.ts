@@ -1,35 +1,14 @@
 import { ILogger } from "../utility/logger";
 import { CreateEntitiesDto } from "../dto/entities.dto";
 import databaseConfig, { DatabaseConfig } from "../db";
-import { BadRequestError } from "../utility/errors";
+import { BadRequestError, NotFoundError } from "../utility/errors";
 import { DataTypes, ModelAttributes } from "sequelize";
 
-export enum COLUMN_TYPE {
-    string = "STRING",
-    integer = "INTEGER",
-    float = "FLOAT",
-    date = "DATE",
-    boolean = "BOOLEAN"
-}
-
-interface IAttr {
-
-    type: any;
-    allowNull: boolean;
-    defaultValue?: any;
-    references?: {
-        model: string;
-        key: string;
-        onDelete: string;
-    };
-
-}
 
 export interface IEntitiesServices {
     createEntities(createEntitiesDto: CreateEntitiesDto): Promise<void>;
     getEntities(): Promise<string[]>;
-    // addColumn(addColumnDto: AddColumnDto): Promise<void>
-
+    dropEntity(entityName: string): Promise<void>
 }
 
 export default class EntitiesServices implements IEntitiesServices {
@@ -57,25 +36,6 @@ export default class EntitiesServices implements IEntitiesServices {
         }
     }
 
-
-    // private async isColumn(tableName: string, columnName: string) {
-    //     try {
-
-    //         const queryInterface = databaseConfig.sequelize.getQueryInterface();
-
-    //         const tableDefinition = await queryInterface.describeTable(tableName);
-
-
-    //         if (tableDefinition[columnName]) return true;
-
-
-    //         return false
-    //     } catch (error) {
-    //         console.error('Error checking for column existence:', error);
-    //         throw error;
-    //     }
-    // }
-
     async createEntities(createEntitiesDto: CreateEntitiesDto): Promise<void> {
         try {
 
@@ -93,7 +53,7 @@ export default class EntitiesServices implements IEntitiesServices {
             //define main attributes like (id , createdAt , updatedAt) for create new entities
             const columns = {
                 id: {
-                    type: DataTypes.INTEGER,
+                    type: DataTypes.INTEGER.UNSIGNED,
                     allowNull: false,
                     primaryKey: true,
                     autoIncrement: true,
@@ -125,82 +85,23 @@ export default class EntitiesServices implements IEntitiesServices {
         }
     }
 
-    // async addColumn(addColumnDto: AddColumnDto): Promise<void> {
-    //     try {
+    async dropEntity(entityName: string) {
+        try {
+            const tableName = entityName
 
-    //         const table = await this.isTable(addColumnDto.table)
+            //check if Entities is already exist
+            const tables = await this.getEntities()
 
-    //         if (!table)
-    //             throw new BadRequestError(`table "${addColumnDto.table}" is not exist`)
+            if (!tables.includes(tableName))
+                throw new NotFoundError(`table ${tableName} is not exist`)
 
+            const queryInterface = databaseConfig.sequelize.getQueryInterface();
 
-    //         const queryInterface = databaseConfig.sequelize.getQueryInterface();
-    //         const sequelize = this.databaseConfig.sequelize
+            await queryInterface.dropTable(tableName)
 
-    //         const column = await this.isColumn(addColumnDto.table, addColumnDto.name)
-
-    //         if (column)
-    //             throw new BadRequestError(`column "${addColumnDto.name}" is already exist in table ${addColumnDto.table}`)
-
-    //         let attr: IAttr = {
-    //             type: DataTypes[addColumnDto.type],
-    //             allowNull: addColumnDto.required,
-    //         };
-    //         ;
-
-    //         if (addColumnDto.type === COLUMN_TYPE.date) {
-    //             attr = {
-    //                 type: DataTypes[addColumnDto.type],
-    //                 defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-    //                 allowNull: !addColumnDto.required,
-    //             }
-    //         } else {
-    //             attr = {
-    //                 type: DataTypes[addColumnDto.type],
-    //                 allowNull: !addColumnDto.required,
-    //             }
-    //         }
-
-    //         if (addColumnDto?.ref) {
-
-    //             const table = await this.isTable(addColumnDto.ref)
-
-    //             if (!table)
-    //                 throw new BadRequestError(`reference table "${addColumnDto.ref}" is not exist`)
-
-    //             const column = await this.isColumn(addColumnDto.ref, "id")
-
-    //             if (!column)
-    //                 throw new BadRequestError(`column "ID" is R already exist in references table ${addColumnDto.ref}`)
-
-
-    //             attr = {
-    //                 allowNull: false,
-    //                 type: DataTypes.INTEGER.UNSIGNED,
-    //                 references: {
-    //                     model: addColumnDto.ref, // Name of the related table
-    //                     key: 'id', // Name of the related column
-    //                     onDelete: 'CASCADE'
-    //                 },
-    //             }
-
-
-    //         }
-
-
-    //         await queryInterface.addColumn(
-    //             addColumnDto.table,
-    //             addColumnDto.name,
-    //             attr
-    //         )
-
-
-    //         return;
-    //     } catch (error) {
-    //         this.logger.error("create entity error", null, {
-    //             error
-    //         })
-    //         throw error
-    //     }
-    // }
+            return;
+        } catch (error) {
+            throw error
+        }
+    }
 }

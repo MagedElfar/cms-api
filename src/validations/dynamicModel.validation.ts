@@ -1,43 +1,116 @@
+import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import { COLUMN_TYPE } from "../services/entities.services";
 
-const createModelSchema = Joi.object({
 
-    name: Joi.string().regex(/^[A-Za-z_]+$/).required()
-        .messages(
-            {
-                'string.pattern.base': 'Invalid characters in the name. Only letters, and underscores are allowed.',
-            }
-        ),
-})
+function createRecordSchema(req: Request) {
+    const data = req.model.attributes
 
-const createAttributeSchema = Joi.object({
-    table: Joi.string().required(),
-    ref: Joi.string().optional(),
-    type: Joi.string()
-        .when('ref', {
+    let dynamicSchema = Joi.object({});
+
+    data.forEach((item) => {
+        if (item.name === "id" || item.name === "updatedAt" || item.name === "createdAt") return;
+
+        const key = item.name!;
+        const isRequired = !item.allowNull; // allowNull: false means required
+        let type;
+
+        // Determine the Joi type based on the "type" property
+        if (item.type.includes('INT')) {
+            type = Joi.number();
+        } else if (item.type.includes('FLOAT')) {
+            type = Joi.number();
+        } else if (item.type.includes("BOOLEAN")) {
+            type = Joi.boolean();
+        } else {
+            type = Joi.string();
+        }
+
+
+        // Add the key to the dynamic schema with validation rules
+        dynamicSchema = dynamicSchema.keys({ [key]: isRequired ? type.required() : type.optional() });
+    });
+
+    return dynamicSchema
+}
+
+function updateRecordSchema(req: Request) {
+    const data = req.model.attributes
+
+    let dynamicSchema = Joi.object({});
+
+    data.forEach((item) => {
+        if (item.name === "id" || item.name === "updatedAt" || item.name === "createdAt") return;
+
+        const key = item.name!;
+        let type;
+
+        // Determine the Joi type based on the "type" property
+        if (item.type.includes('INT')) {
+            type = Joi.number();
+        } else if (item.type.includes('FLOAT')) {
+            type = Joi.number();
+        } else if (item.type.includes("BOOLEAN")) {
+            type = Joi.boolean();
+        } else {
+            type = Joi.string();
+        }
+
+
+        // Add the key to the dynamic schema with validation rules
+        dynamicSchema = dynamicSchema.keys({ [key]: type.optional() });
+    });
+
+    return dynamicSchema
+}
+
+function getAllRecordSchema(req: Request) {
+    const data = req.model.attributes
+
+    let dynamicSchema = Joi.object({
+        page: Joi.number().min(1).optional(),
+        limit: Joi.number().when('page', {
             is: Joi.exist(),
-            then: Joi.valid(COLUMN_TYPE.integer).required(),
-            otherwise: Joi.valid(...Object.values(COLUMN_TYPE)).required(),
-        }),
-    required: Joi.boolean()
-        .when('ref', {
-            is: Joi.exist(),
-            then: Joi.valid(true).required(),
-            otherwise: Joi.required(),
-        }),
-    name: Joi.string().regex(/^[A-Za-z_]+$/).required()
-        .messages(
-            {
-                'string.pattern.base': 'Invalid characters in the name. Only letters, and underscores are allowed.',
-            }
-        ),
+            then: Joi.required(),
+            otherwise: Joi.optional()
+        })
+    });
+
+    data.forEach((item) => {
+        if (item.name === "id" || item.name === "updatedAt" || item.name === "createdAt") return;
+
+        const key = item.name!;
+        let type;
+
+        // Determine the Joi type based on the "type" property
+        if (item.type.includes('INT')) {
+            type = Joi.number();
+        } else if (item.type.includes('FLOAT')) {
+            type = Joi.number();
+        } else if (item.type.includes("BOOLEAN")) {
+            type = Joi.boolean();
+        } else {
+            type = Joi.string();
+        }
+
+
+        // Add the key to the dynamic schema with validation rules
+        dynamicSchema = dynamicSchema.keys({ [key]: type.optional() });
+    });
+
+    return dynamicSchema
+}
+
+
+
+const paramRecordSchema = Joi.object({
+    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
+    id: Joi.number().optional(),
 })
-
-
 
 
 export {
-    createModelSchema,
-    createAttributeSchema
+    paramRecordSchema,
+    getAllRecordSchema,
+    createRecordSchema,
+    updateRecordSchema
 }

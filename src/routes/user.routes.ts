@@ -35,6 +35,13 @@ userRouter.put(
     userController.updateUserHandler.bind(userController)
 )
 
+userRouter.post(
+    "/",
+    permissionMiddleware,
+    validation(userValidation.createSchema),
+    userController.createUserHandler.bind(userController)
+)
+
 userRouter.delete(
     "/",
     permissionMiddleware,

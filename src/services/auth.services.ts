@@ -50,16 +50,8 @@ export default class AuthServices implements IAuthServices {
         user: UserAttributes, accessToken: string, refreshToken: string
     }> {
         try {
-            let user = await this.userServices.findOne({ email: signupDto.email });
 
-            if (user) throw new BadRequestError("email is already used");
-
-            const password = await bcrypt.hash(signupDto.password, 10);
-
-            user = await this.userServices.createUser({
-                ...signupDto,
-                password
-            })
+            const user = await this.userServices.createUser(signupDto)
 
             const accessToken: string = this.jwtServices.createToken({ id: user.id }, config.jwt.expire)
 

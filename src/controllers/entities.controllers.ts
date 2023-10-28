@@ -35,7 +35,7 @@ export default class EntitiesController {
 
             sendResponse(res, {
                 entities
-            }, 201)
+            }, 200)
 
         } catch (error) {
             next(error)
@@ -43,19 +43,19 @@ export default class EntitiesController {
 
     }
 
-    // async createAttributeHandler(req: Request, res: Response, next: NextFunction) {
+    async dropEntitiesHandler(req: Request, res: Response, next: NextFunction) {
 
-    //     try {
+        try {
 
-    //         await this.dynamicModelServices.addColumn(req.body);
+            const { entity } = req.params;
 
-    //         sendResponse(res, {
-    //             message: "attribute is added successfully"
-    //         }, 201)
+            await this.entitiesServices.dropEntity(entity);
 
-    //     } catch (error) {
-    //         next(error)
-    //     }
+            sendResponse(res, {}, 200)
 
-    // }
+        } catch (error) {
+            next(error)
+        }
+
+    }
 }

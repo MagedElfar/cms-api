@@ -2,6 +2,7 @@ import { CreateUserDto, UpdateUserDto } from "../dto/user.dto";
 import { UserAttributes } from "../models/user.model";
 import UserRepository from "../repositories/user.repository";
 import { BadRequestError, NotFoundError } from "../utility/errors";
+import * as bcrypt from "bcrypt";
 
 export interface IUserServices {
     createUser(createUserDto: CreateUserDto): Promise<UserAttributes>;
@@ -23,7 +24,16 @@ export default class UserServices implements IUserServices {
 
     async createUser(createUserDto: CreateUserDto): Promise<UserAttributes> {
         try {
-            const user = await this.userRepository.create(createUserDto)
+            let user = await this.findOne({ email: createUserDto.email });
+
+            if (user) throw new BadRequestError("email is already used");
+
+            const password = await bcrypt.hash(createUserDto.password, 10);
+
+            user = await this.userRepository.create({
+                ...createUserDto,
+                password
+            })
 
             return user
         } catch (error) {

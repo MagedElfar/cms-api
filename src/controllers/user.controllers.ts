@@ -38,6 +38,7 @@ export class UserController {
 
         try {
 
+
             const user = await this.userServices.createUser(req.body)
 
             sendResponse(res, {

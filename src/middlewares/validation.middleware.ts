@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import { BadRequestError } from "../utility/errors";
+import * as dynamicModelValidation from "../validations/dynamicModel.validation"
 
 export default function (schema: Joi.ObjectSchema, type = "body") {
 
@@ -40,4 +41,51 @@ export default function (schema: Joi.ObjectSchema, type = "body") {
         next()
     }
 
+}
+
+
+function createRecordSchemaMiddleware(req: Request, res: Response, next: NextFunction) {
+
+    const schemaErr = dynamicModelValidation.createRecordSchema(req).validate(req.body, {
+        abortEarly: false,
+    })
+
+    if (schemaErr.error) {
+        return next(new BadRequestError(schemaErr.error?.message.split(".")))
+    }
+
+    next()
+}
+
+function updateRecordSchemaMiddleware(req: Request, res: Response, next: NextFunction) {
+
+    const schemaErr = dynamicModelValidation.updateRecordSchema(req).validate(req.body, {
+        abortEarly: false,
+    })
+
+    if (schemaErr.error) {
+        return next(new BadRequestError(schemaErr.error?.message.split(".")))
+    }
+
+    next()
+}
+
+function getAllRecordSchemaMiddleware(req: Request, res: Response, next: NextFunction) {
+
+    const schemaErr = dynamicModelValidation.getAllRecordSchema(req).validate(req.query, {
+        abortEarly: false,
+    })
+
+    if (schemaErr.error) {
+        return next(new BadRequestError(schemaErr.error?.message.split(".")))
+    }
+
+    next()
+}
+
+
+export {
+    createRecordSchemaMiddleware,
+    updateRecordSchemaMiddleware,
+    getAllRecordSchemaMiddleware
 }
