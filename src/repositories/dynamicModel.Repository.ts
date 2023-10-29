@@ -1,4 +1,4 @@
-import { CreateRecordDto, DeleteRecordDto, GetManyRecordDto, GetOneRecordDto, GetRecordByIdDto, UpdateRecordDto } from './../dto/dynamicModel.dto';
+import { CreateRecordDto, DeleteRecordDto, GetManyRecordDto, GetOneRecordDto, GetRecordByIdDto, UpdateRecordDto } from '../dto/dynamicModel.dto';
 import databaseConfig, { DatabaseConfig } from "../db";
 import { ILogger } from "../utility/logger";
 import { InternalServerError } from '../utility/errors';

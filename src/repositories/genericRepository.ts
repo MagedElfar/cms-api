@@ -38,6 +38,7 @@ export default abstract class GenericRepository<T extends Model, I> {
             return model.dataValues
 
         } catch (error: any) {
+            console.log(error)
             this.logger.error("database error", null, error?.stack || error?.message || error)
             throw new InternalServerError("database error")
         }
@@ -63,23 +64,33 @@ export default abstract class GenericRepository<T extends Model, I> {
 
             return model?.dataValues
         } catch (error: any) {
+            console.log(error)
             this.logger.error("database error", null, error?.stack || error?.message || error)
             throw new InternalServerError("database error")
         }
     }
 
-    // ... other methods ...
-
     public async findMany(getManyDto: GetManyDto): Promise<{ count: number, records: I[] }> {
         try {
             const data = await this.model.findAll({
-                where: getManyDto.data,
+                where: getManyDto?.data?.name ?
+                    {
+                        name: {
+                            [Op.like]: `%${getManyDto.data.name}%`
+                        }
+                    } : getManyDto.data,
+
                 limit: getManyDto.options.limit,
                 offset: (getManyDto.options.page - 1) * getManyDto.options.limit,
             });
 
             const count = await this.model.count({
-                where: getManyDto.data,
+                where: getManyDto?.data?.name ?
+                    {
+                        name: {
+                            [Op.like]: `%${getManyDto.data.name}%`
+                        }
+                    } : getManyDto.data
             });
 
             const records = data.map((model) => model.dataValues);
@@ -91,21 +102,6 @@ export default abstract class GenericRepository<T extends Model, I> {
         }
     }
 
-    public async getCount(data: WhereOptions<Attributes<T>>): Promise<number> {
-        try {
-
-
-            const count = await this.model.count({
-                where: data
-            });
-
-
-            return count
-        } catch (error: any) {
-            this.logger.error("database error", null, error);
-            throw new InternalServerError("database error");
-        }
-    }
     public async update(id: number, updates: Partial<T>): Promise<I | null> {
         try {
             const updateOptions: UpdateOptions = {
@@ -126,6 +122,21 @@ export default abstract class GenericRepository<T extends Model, I> {
         }
     }
 
+    public async getCount(data: WhereOptions<Attributes<T>>): Promise<number> {
+        try {
+
+
+            const count = await this.model.count({
+                where: data
+            });
+
+
+            return count
+        } catch (error: any) {
+            this.logger.error("database error", null, error);
+            throw new InternalServerError("database error");
+        }
+    }
 
     public async delete(option: WhereAttributeHashValue<Attributes<T>[string]>): Promise<number> {
         try {

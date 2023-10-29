@@ -9,7 +9,7 @@ const createModelSchema = Joi.object({
                 'string.pattern.base': 'Invalid characters in the name. Only letters, and underscores are allowed.',
             }
         ),
-}) 
+})
 
 
 const removeEntitySchema = Joi.object({
@@ -17,13 +17,26 @@ const removeEntitySchema = Joi.object({
 })
 
 const updateEntitySchema = Joi.object({
-    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
     newName: Joi.string().required()
+})
+
+const getManySchema = Joi.object({
+
+    name: Joi.string().optional(),
+
+    page: Joi.number().min(1).optional(),
+    limit: Joi.number().when('page', {
+        is: Joi.exist(),
+        then: Joi.required(),
+        otherwise: Joi.optional()
+    })
+
 })
 
 
 export {
     createModelSchema,
     removeEntitySchema,
-    updateEntitySchema
+    updateEntitySchema,
+    getManySchema
 }

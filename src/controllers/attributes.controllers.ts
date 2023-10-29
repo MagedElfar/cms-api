@@ -8,6 +8,7 @@ export default class AttributesController {
     private attributesServices: IAttributesServices
 
     constructor(attributesServices: IAttributesServices) {
+
         this.attributesServices = attributesServices
     }
 
@@ -16,10 +17,12 @@ export default class AttributesController {
 
         try {
 
-            await this.attributesServices.createAttributes(req.body);
+
+            const attribute = await this.attributesServices.createAttributes(req.body);
 
             sendResponse(res, {
-                message: "attributes is added successfully"
+                message: "attributes is added successfully",
+                attribute
             }, 201)
 
         } catch (error) {
@@ -28,53 +31,53 @@ export default class AttributesController {
 
     }
 
-    async removeAttributeHandler(req: Request, res: Response, next: NextFunction) {
-        try {
+    // async removeAttributeHandler(req: Request, res: Response, next: NextFunction) {
+    //     try {
 
-            const { entity, attribute } = req.params
-            await this.attributesServices.removeAttribute({ entity, attribute });
+    //         const { entity, attribute } = req.params
+    //         await this.attributesServices.removeAttribute({ entity, attribute });
 
-            sendResponse(res, {
-                message: "attributes is removed successfully"
-            }, 200)
+    //         sendResponse(res, {
+    //             message: "attributes is removed successfully"
+    //         }, 200)
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
-    async renameAttributeHandler(req: Request, res: Response, next: NextFunction) {
-        try {
+    // async renameAttributeHandler(req: Request, res: Response, next: NextFunction) {
+    //     try {
 
-            await this.attributesServices.renameAttribute(req.body);
+    //         await this.attributesServices.renameAttribute(req.body);
 
-            sendResponse(res, {
-                message: "attribute is renamed successfully"
-            }, 200)
+    //         sendResponse(res, {
+    //             message: "attribute is renamed successfully"
+    //         }, 200)
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
-    async getAttributeHandler(req: Request, res: Response, next: NextFunction) {
-        try {
+    // async getAttributeHandler(req: Request, res: Response, next: NextFunction) {
+    //     try {
 
-            const { entity } = req.params
+    //         const { entity } = req.params
 
-            const attributes = await this.attributesServices.getColumns({ entity });
+    //         const attributes = await this.attributesServices.getColumns({ entity });
 
-            sendResponse(res, {
-                data: {
-                    entity,
-                    attributes
-                }
-            }, 200)
+    //         sendResponse(res, {
+    //             data: {
+    //                 entity,
+    //                 attributes
+    //             }
+    //         }, 200)
 
-        } catch (error) {
-            next(error)
-        }
-    }
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
 
 }

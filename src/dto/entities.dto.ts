@@ -3,6 +3,6 @@ export class CreateEntitiesDto {
 }
 
 export class UpdatedEntityDto {
-    entity: string;
+    id: number;
     newName: string
 }

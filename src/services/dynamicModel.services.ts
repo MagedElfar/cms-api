@@ -1,5 +1,5 @@
 import { CreateRecordDto, DeleteRecordDto, GetManyRecordDto, GetOneRecordDto, GetRecordByIdDto, UpdateRecordDto } from "../dto/dynamicModel.dto";
-import { IDynamicRepository } from "../repositories/dynamicModel.Repository";
+import { IDynamicRepository } from "../repositories/dynamicModel.repository";
 import { BadRequestError, NotFoundError } from "../utility/errors";
 import moment from "moment";
 

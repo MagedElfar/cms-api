@@ -1,10 +1,20 @@
 import Joi from "joi";
-import { COLUMN_TYPE } from "../services/attributes.services";
+import { COLUMN_TYPE, FK_CONSTRAINTS } from "../models/attribute.model";
 
-const attributeSchema = Joi.object({
-    ref: Joi.string().optional(),
+const createAttributeSchema = Joi.object({
+    refId: Joi.number().optional(),
+    onDelete: Joi.string().valid(...Object.values(FK_CONSTRAINTS)).when('refId', {
+        is: Joi.exist(),
+        then: Joi.required(),
+        otherwise: Joi.optional(),
+    }),
+    onUpdate: Joi.string().valid(...Object.values(FK_CONSTRAINTS)).when('refId', {
+        is: Joi.exist(),
+        then: Joi.required(),
+        otherwise: Joi.optional(),
+    }),
     type: Joi.string()
-        .when('ref', {
+        .when('refId', {
             is: Joi.exist(),
             then: Joi.valid(COLUMN_TYPE.integer).required(),
             otherwise: Joi.valid(...Object.values(COLUMN_TYPE)).required(),
@@ -26,11 +36,6 @@ const attributeSchema = Joi.object({
                 'any.invalid': 'Invalid column name. "id," "createdAt," and "updatedAt" are not allowed.'
             }
         ),
-})
-
-const createAttributeSchema = Joi.object({
-    entity: Joi.string().required(),
-    attribute: Joi.array().items(attributeSchema).min(1).required()
 })
 
 

@@ -4,7 +4,7 @@ import validation, { createRecordSchemaMiddleware, updateRecordSchemaMiddleware,
 import mapModelMiddleware from "../middlewares/mappedModel.middleware";
 import { DynamicModelController } from "../controllers/dynamicModel.controllers";
 import DynamicModelServices from "../services/dynamicModel.services";
-import DynamicRepository from "../repositories/dynamicModel.Repository";
+import DynamicRepository from "../repositories/dynamicModel.repository";
 import { Logger } from "../utility/logger";
 
 const dynamicModelRouter = Router();

@@ -4,20 +4,22 @@ import databaseConfig, { DatabaseConfig } from "../db";
 import AttributesServices, { IAttributesServices } from "../services/attributes.services";
 import EntitiesServices from "../services/entities.services";
 import { Logger } from "../utility/logger";
+import { EntityAttributes } from "./entity.model";
 
 export default class DynamicModel {
-    private model: IModel
+    private entity: EntityAttributes;
     private readonly databaseConfig: DatabaseConfig
 
-    constructor(model: IModel) {
-        this.model = model
+    constructor(entity: EntityAttributes) {
+        this.entity = entity
         this.databaseConfig = databaseConfig
 
     }
 
 
-    mainModel(modelData?: IModel) {
-        const model = modelData ? modelData : this.model
+    async mainModel() {
+
+        const entity = this.entity;
 
         const dynamicModelAttributes: any = {};
 
@@ -27,78 +29,83 @@ export default class DynamicModel {
             primaryKey: true,
         };
 
+        if (entity.attributes) {
+            entity.attributes.forEach((attribute) => {
 
-        model.attributes.forEach((column) => {
+                if (attribute.name === "id") return;
 
-            if (column.name === "id") return;
-
-            dynamicModelAttributes[column.name!] = {
-                type: Sequelize.literal(column.type),
-            };
-
-            // If references exist, add a reference to another model
-            if (column.references) {
-                dynamicModelAttributes[column.name!].references = {
-                    model: column.references.model,
-                    key: column.references.key,
+                dynamicModelAttributes[attribute.name!] = {
+                    type: DataTypes[attribute.type],
+                    allowNull: !attribute.required
                 };
-            }
-        });
 
-        return this.databaseConfig.sequelize.define(model.entity, dynamicModelAttributes, {
+                // If references exist, add a reference to another model
+                if (attribute.ref) {
+                    dynamicModelAttributes[attribute.name!].type = DataTypes.INTEGER.UNSIGNED
+                    dynamicModelAttributes[attribute.name!].references = {
+                        model: attribute.ref.name,
+                        key: "id",
+                    };
+                }
+            });
+        }
+
+
+        const model = this.databaseConfig.sequelize.define(entity.name, dynamicModelAttributes, {
             timestamps: true,
-            tableName: model.entity,
+            tableName: entity.name,
             createdAt: "createdAt", // Customize the name of the createdAt field
             updatedAt: "updatedAt", // Customize the name of the updatedAt field
         })
 
+        return { model }
     }
 
-    async referenceModel() {
-        const model = this.mainModel();
-        const include: any[] = []
+    // async referenceModel() {
+    //     const model = this.mainModel();
+    //     const include: any[] = []
 
-        const logger = new Logger()
+    //     const logger = new Logger()
 
-        const attributesServices: IAttributesServices = new AttributesServices(
-            new EntitiesServices(logger),
-            logger
-        )
+    //     const attributesServices: IAttributesServices = new AttributesServices(
+    //         new EntitiesServices(logger),
+    //         logger
+    //     )
 
-        // Create a DynamicModel for your primary model (e.g., DynamicModel)
-        // Loop through your data to find and define associations
-        await Promise.all(this.model.attributes.map(async (column) => {
-            if (column.references) {
+    //     // Create a DynamicModel for your primary model (e.g., DynamicModel)
+    //     // Loop through your data to find and define associations
+    //     await Promise.all(this.model.attributes.map(async (column) => {
+    //         if (column.references) {
 
-                const attributes = await attributesServices.getColumns({ entity: column.references.model })
+    //             const attributes = await attributesServices.getColumns({ entity: column.references.model })
 
-                const ReferencedModel = this.mainModel({
-                    entity: column.references.model,
-                    attributes
-                })
+    //             const ReferencedModel = this.mainModel({
+    //                 entity: column.references.model,
+    //                 attributes
+    //             })
 
-                // Assuming you have a dynamic model for the referenced model
-                // Define the association
-                model.belongsTo(ReferencedModel, {
-                    foreignKey: column.name, // Assuming the column name matches the model name
-                    as: column.references.model, // Use the referenced model name as the alias
-                    targetKey: column.references.key,
-                });
+    //             // Assuming you have a dynamic model for the referenced model
+    //             // Define the association
+    //             model.belongsTo(ReferencedModel, {
+    //                 foreignKey: column.name, // Assuming the column name matches the model name
+    //                 as: column.references.model, // Use the referenced model name as the alias
+    //                 targetKey: column.references.key,
+    //             });
 
-                include.push({
-                    model: ReferencedModel,
-                    as: column.references.model
-                })
-            }
-        }))
+    //             include.push({
+    //                 model: ReferencedModel,
+    //                 as: column.references.model
+    //             })
+    //         }
+    //     }))
 
-        // Now, you can use the DynamicModel with dynamic associations
+    //     // Now, you can use the DynamicModel with dynamic associations
 
 
-        return {
-            model,
-            include
-        }
-    }
+    //     return {
+    //         model,
+    //         include
+    //     }
+    // }
 }
 

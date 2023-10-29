@@ -15,10 +15,11 @@ export default class EntitiesController {
 
         try {
 
-            await this.entitiesServices.createEntities(req.body);
+            const entity = await this.entitiesServices.createEntities(req.body);
 
             sendResponse(res, {
-                message: "entities is created successfully"
+                message: "entities is created successfully",
+                entity
             }, 201)
 
         } catch (error) {
@@ -31,10 +32,36 @@ export default class EntitiesController {
 
         try {
 
-            const entities = await this.entitiesServices.getEntities();
+            const { limit = 10, page = 1, ...others } = req.query
+
+            const entities = await this.entitiesServices.getEntities({
+                data: others,
+                options: {
+                    limit: +limit,
+                    page: +page
+                }
+            });
 
             sendResponse(res, {
                 entities
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
+    async getEntityHandler(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            const { id } = req.params
+
+            const entity = await this.entitiesServices.getEntity({ id: +id });
+
+            sendResponse(res, {
+                entity
             }, 200)
 
         } catch (error) {
@@ -47,9 +74,9 @@ export default class EntitiesController {
 
         try {
 
-            const { entity } = req.params;
+            const { id } = req.params;
 
-            await this.entitiesServices.dropEntity(entity);
+            await this.entitiesServices.dropEntity(+id);
 
             sendResponse(res, {}, 200)
 
@@ -63,7 +90,12 @@ export default class EntitiesController {
 
         try {
 
-            await this.entitiesServices.updatedEntity(req.body);
+            const { id } = req.params
+
+            await this.entitiesServices.updatedEntity({
+                ...req.body,
+                id: +id
+            });
 
             sendResponse(res, {}, 200)
 

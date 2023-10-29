@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "migration": "nodemon src/db/migration"
+    "migration": "nodemon src/migration.ts"
   },
   "keywords": [],
   "author": "",

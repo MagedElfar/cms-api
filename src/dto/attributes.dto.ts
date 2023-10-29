@@ -1,15 +1,13 @@
-import { COLUMN_TYPE } from "../services/attributes.services";
+import { COLUMN_TYPE, FK_CONSTRAINTS } from "../models/attribute.model";
 
-export class AttributesDto {
-    name: string;
-    ref?: string;
-    required: boolean;
-    type: COLUMN_TYPE
-}
 
 export class CreateAttributesDto {
-    entity: string;
-    attribute: AttributesDto[]
+    name: string;
+    required: boolean;
+    type: COLUMN_TYPE
+    refId?: number
+    onDelete?: FK_CONSTRAINTS
+    onUpdate?: FK_CONSTRAINTS
 }
 
 export class RemoveAttributeDto {

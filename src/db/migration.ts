@@ -1,9 +1,8 @@
 import DataBase from "./index"
-import User from "../models/user.model";
-import { ModelStatic, QueryInterface } from "sequelize";
+import { QueryInterface } from "sequelize";
 import DatabaseConfig from "./../db"
-import RefreshToken from "../models/refreshToken.model";
 import { InternalServerError } from "../utility/errors";
+
 
 // Get the existing indexes for the model from the database
 async function getExistingIndexes(queryInterface: QueryInterface, tableName: string): Promise<any> {
@@ -68,7 +67,7 @@ async function removeIndexes(queryInterface: QueryInterface, tableName: string) 
 //     }
 // }
 
-async function migration(models: ModelStatic<any>[]) {
+export async function migration(models: any[]) {
     try {
         await DataBase.testConnection();
         const queryInterface = DatabaseConfig.sequelize.getQueryInterface();
@@ -92,9 +91,3 @@ async function migration(models: ModelStatic<any>[]) {
         throw new InternalServerError(error);
     }
 }
-
-
-migration([
-    User,
-    RefreshToken,
-])

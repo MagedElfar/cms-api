@@ -3,32 +3,38 @@ import { CreateEntitiesDto, UpdatedEntityDto } from "../dto/entities.dto";
 import databaseConfig, { DatabaseConfig } from "../db";
 import { BadRequestError, NotFoundError } from "../utility/errors";
 import { DataTypes, ModelAttributes } from "sequelize";
+import EntityRepository from "../repositories/entity.repository";
+import { EntityAttributes } from "../models/entity.model";
+import DynamicModel from "../models/dynamicModel.model";
+import { migration } from "../db/migration";
+import { GetManyDto } from "../repositories/genericRepository";
 
 
 export interface IEntitiesServices {
-    createEntities(createEntitiesDto: CreateEntitiesDto): Promise<void>;
-    getEntities(): Promise<string[]>;
-    dropEntity(entityName: string): Promise<void>
+    createEntities(createEntitiesDto: CreateEntitiesDto): Promise<EntityAttributes>;
+    getEntities(getManyDto: GetManyDto): Promise<any>;
+    dropEntity(id: number): Promise<void>
     updatedEntity(updatedEntityDto: UpdatedEntityDto): Promise<void>
+    getEntity(entityAttributes: Partial<EntityAttributes>): Promise<EntityAttributes | null>
 }
 
 export default class EntitiesServices implements IEntitiesServices {
 
     private readonly logger: ILogger;
     private readonly databaseConfig: DatabaseConfig
+    private readonly entityRepository: EntityRepository;
 
-    constructor(logger: ILogger) {
+    constructor(entityRepository: EntityRepository, logger: ILogger) {
         this.logger = logger
-        this.databaseConfig = databaseConfig
+        this.databaseConfig = databaseConfig,
+            this.entityRepository = entityRepository
     }
 
-    async getEntities(): Promise<string[]> {
+    async getEntities(getManyDto: GetManyDto): Promise<any> {
         try {
-            const queryInterface = databaseConfig.sequelize.getQueryInterface();
+            const data = await this.entityRepository.findMany(getManyDto)
 
-            const tables = await queryInterface.showAllTables()
-
-            return tables;
+            return data
         } catch (error) {
             this.logger.error("create entity error", null, {
                 error
@@ -37,47 +43,35 @@ export default class EntitiesServices implements IEntitiesServices {
         }
     }
 
-    async createEntities(createEntitiesDto: CreateEntitiesDto): Promise<void> {
+    async getEntity(entityAttributes: Partial<EntityAttributes>): Promise<EntityAttributes | null> {
         try {
 
-            const tableName = createEntitiesDto.name.toLowerCase()
+            const entity = await this.entityRepository.findOne(entityAttributes);
 
-            //check if Entities is already exist
-            const tables = await this.getEntities()
+            return entity;
+        } catch (error) {
+            throw error
+        }
+    }
 
-            if (tables.includes(tableName))
-                throw new BadRequestError(`table ${tableName} is already exist`)
+    async createEntities(createEntitiesDto: CreateEntitiesDto): Promise<EntityAttributes> {
+        let entity;
+        try {
 
-            const queryInterface = databaseConfig.sequelize.getQueryInterface();
-            const sequelize = this.databaseConfig.sequelize
+            entity = await this.getEntity(createEntitiesDto)
 
-            //define main attributes like (id , createdAt , updatedAt) for create new entities
-            const columns = {
-                id: {
-                    type: DataTypes.INTEGER.UNSIGNED,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                createdAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-                    allowNull: false,
-                },
-                updatedAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-                    allowNull: false,
-                },
-            };
+            if (entity) throw new BadRequestError("entity is already exist")
 
-            //create new entities
-            await queryInterface.createTable(
-                tableName,
-                columns
-            )
+            entity = await this.entityRepository.create(createEntitiesDto)
 
-            return;
+            const dynamicModel = new DynamicModel(entity!)
+
+            const { model } = await dynamicModel.mainModel()
+
+
+            await migration([model])
+
+            return entity!;
         } catch (error) {
             this.logger.error("create entity error", null, {
                 error
@@ -86,19 +80,18 @@ export default class EntitiesServices implements IEntitiesServices {
         }
     }
 
-    async dropEntity(entityName: string) {
+    async dropEntity(id: number) {
         try {
-            const tableName = entityName
 
-            //check if Entities is already exist
-            const tables = await this.getEntities()
+            const entity = await this.getEntity({ id });
 
-            if (!tables.includes(tableName))
-                throw new NotFoundError(`table ${tableName} is not exist`)
+            if (!entity) throw new NotFoundError("entity not found")
 
             const queryInterface = databaseConfig.sequelize.getQueryInterface();
 
-            await queryInterface.dropTable(tableName)
+            await queryInterface.dropTable(entity.name);
+
+            await this.entityRepository.delete({ id })
 
             return;
         } catch (error) {
@@ -108,19 +101,24 @@ export default class EntitiesServices implements IEntitiesServices {
 
     async updatedEntity(updatedEntityDto: UpdatedEntityDto) {
         try {
-            const tables = await this.getEntities()
 
-            //check if Entities is already exist
-            if (!tables.includes(updatedEntityDto.entity))
-                throw new NotFoundError(`table ${updatedEntityDto.entity} is not exist`)
+            const entity = await this.getEntity({ id: updatedEntityDto.id });
 
-            //check  if there an Entities has same name 
-            if (tables.includes(updatedEntityDto.newName))
-                throw new NotFoundError(`table ${updatedEntityDto.newName} is already exist`)
+            if (!entity) throw new NotFoundError("entity not found")
+
+            const isEntity = await this.getEntity({ name: updatedEntityDto.newName });
+
+            console.log("isEntity", updatedEntityDto)
+
+            if (isEntity) throw new BadRequestError("entity is already exist")
 
             const queryInterface = databaseConfig.sequelize.getQueryInterface();
 
-            await queryInterface.renameTable(updatedEntityDto.entity, updatedEntityDto.newName)
+            await queryInterface.renameTable(entity.name, updatedEntityDto.newName)
+
+            await this.entityRepository.update(updatedEntityDto.id, {
+                name: updatedEntityDto.newName
+            })
 
             return;
 
