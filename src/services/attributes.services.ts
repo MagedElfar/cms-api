@@ -109,6 +109,7 @@ export default class AttributesServices implements IAttributesServices {
         }
     }
 
+
     async deleteAttribute(id: number): Promise<number> {
         const queryInterface = this.databaseConfig.sequelize.getQueryInterface();
         const savepoint: Transaction[] = [];
