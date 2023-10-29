@@ -1,8 +1,8 @@
-import { IModel } from './../middlewares/mappedModel.middleware';
+import { EntityAttributes } from "../models/entity.model";
 
 export class CreateRecordDto {
     data: any;
-    model: IModel;
+    entity: EntityAttributes;
 }
 
 export class GetOneRecordDto extends CreateRecordDto { }
@@ -20,7 +20,7 @@ export class UpdateRecordDto extends CreateRecordDto {
 
 export class GetRecordByIdDto {
     id: number;
-    model: IModel;
+    entity: EntityAttributes;
 }
 
 export class DeleteRecordDto extends GetRecordByIdDto { }

@@ -64,7 +64,11 @@ export default class EntitiesServices implements IEntitiesServices {
 
             entity = await this.entityRepository.create(createEntitiesDto)
 
-            const dynamicModel = new DynamicModel(entity!)
+            const dynamicModel = new DynamicModel(
+                entity!,
+                this.logger,
+                this.entityRepository
+            )
 
             const { model } = await dynamicModel.mainModel()
 

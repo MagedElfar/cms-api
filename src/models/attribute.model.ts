@@ -1,6 +1,5 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import DatabaseConfig from "./../db";
-import User from "./user.model";
 import { EntityAttributes } from "./entity.model";
 import Entity from "./entity.model";
 
@@ -23,6 +22,7 @@ export interface AttrAttributes {
     name: string,
     required: boolean,
     type: COLUMN_TYPE,
+    entities?: EntityAttributes[]
     refId?: number,
     ref?: EntityAttributes,
     onDelete?: FK_CONSTRAINTS,
@@ -53,6 +53,14 @@ Attribute.init(
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        onUpdate: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        onDelete: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         type: {
             type: DataTypes.ENUM(...Object.values(COLUMN_TYPE)),

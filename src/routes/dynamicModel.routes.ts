@@ -6,12 +6,13 @@ import { DynamicModelController } from "../controllers/dynamicModel.controllers"
 import DynamicModelServices from "../services/dynamicModel.services";
 import DynamicRepository from "../repositories/dynamicModel.repository";
 import { Logger } from "../utility/logger";
+import EntityRepository from "../repositories/entity.repository";
 
 const dynamicModelRouter = Router();
 
 const dynamicModelController: DynamicModelController = new DynamicModelController(
     new DynamicModelServices(
-        new DynamicRepository(new Logger())
+        new DynamicRepository(new EntityRepository(), new Logger()),
     )
 )
 

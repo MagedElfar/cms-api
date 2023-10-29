@@ -1,5 +1,6 @@
 import { CreateRecordDto, DeleteRecordDto, GetManyRecordDto, GetOneRecordDto, GetRecordByIdDto, UpdateRecordDto } from "../dto/dynamicModel.dto";
 import { IDynamicRepository } from "../repositories/dynamicModel.repository";
+import EntityRepository from "../repositories/entity.repository";
 import { BadRequestError, NotFoundError } from "../utility/errors";
 import moment from "moment";
 
@@ -33,8 +34,10 @@ export default class DynamicModelServices implements IDynamicModelServices {
     async createRecord(createRecordDto: CreateRecordDto): Promise<any> {
         try {
 
-            const references = createRecordDto.model.attributes.filter(item => item.references)
-            const dateAttr = createRecordDto.model.attributes.filter(item => item.type === "DATETIME")
+            const attributes = createRecordDto.entity.attributes || [];
+
+            const references = attributes.filter(item => item.ref)
+            const dateAttr = attributes.filter(item => item.type === "DATE")
 
             dateAttr.forEach(attr => {
 
@@ -45,21 +48,16 @@ export default class DynamicModelServices implements IDynamicModelServices {
                 }
             })
 
-            await Promise.all(references.map(async (ref) => {
-                if (ref && createRecordDto.data[ref.name!]) {
+            await Promise.all(references.map(async (attr) => {
+                if (attr && createRecordDto.data[attr.name!]) {
                     const record = await this.getOneRecord({
-                        data: { id: createRecordDto.data[ref.name!] },
-                        model: {
-                            entity: ref.references?.model!,
-                            attributes: []
-                        },
+                        data: { id: createRecordDto.data[attr.name!] },
+                        entity: attr.ref!
                     })
 
-                    if (!record) throw new NotFoundError(`record not found in '${ref.references?.model}' reference `)
+                    if (!record) throw new NotFoundError(`record not found in '${attr.ref?.name}' reference `)
                 }
             }))
-
-
 
 
             return await this.dynamicRepository.createRecord(createRecordDto)
@@ -70,8 +68,10 @@ export default class DynamicModelServices implements IDynamicModelServices {
 
     async updateRecord(updateRecordDto: UpdateRecordDto): Promise<any> {
         try {
-            const references = updateRecordDto.model.attributes.filter(item => item.references)
-            const dateAttr = updateRecordDto.model.attributes.filter(item => item.type === "DATETIME")
+            const attributes = updateRecordDto.entity.attributes || [];
+
+            const references = attributes.filter(item => item.ref)
+            const dateAttr = attributes.filter(item => item.type === "DATE")
 
             dateAttr.forEach(attr => {
 
@@ -81,16 +81,13 @@ export default class DynamicModelServices implements IDynamicModelServices {
                         throw new BadRequestError(`${attr.name!} has invalid date format right format is 'YYYY-MM-DD'`)
                 }
             })
-            await Promise.all(references.map(async (ref) => {
-                if (ref && updateRecordDto.data[ref.name!]) {
+            await Promise.all(references.map(async (attr) => {
+                if (attr && updateRecordDto.data[attr.name!]) {
                     const record = await this.getOneRecord({
-                        data: { id: updateRecordDto.data[ref.name!] },
-                        model: {
-                            entity: ref.references?.model!,
-                            attributes: []
-                        },
+                        data: { id: updateRecordDto.data[attr.name!] },
+                        entity: attr.ref!
                     })
-                    if (!record) throw new NotFoundError(`record not found in reference table '${ref.references?.model}'`)
+                    if (!record) throw new NotFoundError(`record not found in reference table '${attr.ref?.name}'`)
                 }
             }))
 
@@ -103,7 +100,6 @@ export default class DynamicModelServices implements IDynamicModelServices {
             throw error
         }
     }
-
 
     async getRecordById(getRecordByIdDto: GetRecordByIdDto): Promise<any> {
         try {

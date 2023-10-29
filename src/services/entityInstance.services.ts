@@ -2,17 +2,16 @@ import { migration } from "../db/migration";
 import { CreateEntityInstanceDto } from "../dto/entityInstance.dto";
 import DynamicModel from "../models/dynamicModel.model";
 import { EntityInstanceAttributes } from "../models/entityInstance.model";
+import EntityRepository from "../repositories/entity.repository";
 import EntityInstanceRepository from "../repositories/entityInstance.repository";
 import { BadRequestError, NotFoundError } from "../utility/errors";
+import { Logger } from "../utility/logger";
 import { IAttributesServices } from "./attributes.services";
 import { IEntitiesServices } from "./entities.services";
 
 export interface IEntityInstanceServices {
     create(createEntityInstanceDto: CreateEntityInstanceDto): Promise<EntityInstanceAttributes>;
-    // findById(id: number): Promise<RoleAttributes | null>
     findOne(data: Partial<EntityInstanceAttributes>): Promise<EntityInstanceAttributes | null>;
-    // findMany(): Promise<{ count: number, data: RolePermissionAttributes }>;
-    // remove(id: number): Promise<number>
 }
 
 
@@ -52,22 +51,23 @@ export default class EntityInstanceServices implements IEntityInstanceServices {
 
             entityValue = await this.findOne(createEntityInstanceDto)
 
-            // if (entityValue) throw new BadRequestError("attribute is already has this assign to entity")
+            if (entityValue) throw new BadRequestError("attribute is already has this assign to entity")
 
-            entityValue = await this.entityInstanceRepository.create(createEntityInstanceDto)
-            entity = await this.entitiesServices.getEntity({
-                id: createEntityInstanceDto.entityId
-            });
+            if (entity?.attributes) entity?.attributes?.push(attribute)
 
-            const dynamicModel = new DynamicModel(entity!);
+            const dynamicModel = new DynamicModel(
+                entity!,
+                new Logger(),
+                new EntityRepository()
+            );
 
             const { model } = await dynamicModel.mainModel();
 
             await migration([model])
 
-            return {
-                ...entityValue
-            }
+            entityValue = await this.entityInstanceRepository.create(createEntityInstanceDto)
+
+            return entityValue
         } catch (error) {
             throw error
         }

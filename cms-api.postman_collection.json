@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"maged92\",\r\n    \"email\": \"maged.me@gmail.com\",\r\n    \"password\": \"123456789\"\r\n}",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"123456789\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +44,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"maged.1992.me@gmail.com\",\r\n    \"password\": \"maged@1992\"\r\n}",
+							"raw": "{\r\n    \"email\": \"maged.1992.me@gmail.com\",\r\n    \"password\": \"123456789\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,13 +200,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users/6",
+							"raw": "{{url}}/users/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"6"
+								"3"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get user.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | string |"
@@ -219,7 +219,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users?limit=9&page=2&email=maged.me@gmail.com",
+							"raw": "{{url}}/users?limit=9&page=1&name=e",
 							"host": [
 								"{{url}}"
 							],
@@ -233,16 +233,16 @@
 								},
 								{
 									"key": "page",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "name",
-									"value": "maged92",
-									"disabled": true
+									"value": "e"
 								},
 								{
 									"key": "email",
-									"value": "maged.me@gmail.com"
+									"value": "maged.me@gmail.com",
+									"disabled": true
 								}
 							]
 						},
@@ -257,7 +257,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"maged.1992.me@gmail.com\",\r\n    \"name\": \"maged\"\r\n}",
+							"raw": "{\r\n    \"email\":\"maged.1992.me@gmail.com\",\r\n    \"name\": \"maged mohamed\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -319,13 +319,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/users/14",
+							"raw": "{{url}}/users/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"14"
+								"3"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update user data.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | user name | false | string |\n| email | user email | true | string |"
@@ -347,14 +347,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/users/role/7",
+							"raw": "{{url}}/users/role/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
 								"role",
-								"7"
+								"3"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update user role.\n\n## EndPoint:\n\n##### /api/users/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | user id | true | number |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| role | user role  <br>valid values (  <br>admin ,operator  <br>)e | true | string |"
@@ -413,7 +413,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"course\"\r\n}",
+							"raw": "{\r\n    \"name\": \"borrow\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -440,7 +440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"student\",\r\n    \"newName\": \"students\"\r\n}",
+							"raw": "{\r\n    \"newName\": \"books\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -448,15 +448,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/entities",
+							"raw": "{{url}}/entities/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"entities"
+								"entities",
+								"1"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for rename an exist entity\n\n## EndPoint:\n\n##### /api/entities\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the current entity | true | string |\n| newName | entity new name | true | true |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for rename an exist entity\n\n## EndPoint:\n\n##### /api/entities/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | entity ID | true | string |\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| newName | entity new name | true | string |"
 					},
 					"response": []
 				},
@@ -466,16 +467,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/entities/customer",
+							"raw": "{{url}}/entities/13",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"entities",
-								"customer"
+								"13"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for drop or delete an exist entity\n\n## EndPoint:\n\n##### /api/entities/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | name of the entity. | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for drop or delete an exist entity\n\n## EndPoint:\n\n##### /api/entities/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | entity ID | true | string |"
 					},
 					"response": []
 				},
@@ -485,12 +486,46 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/entities",
+							"raw": "{{url}}/entities?limit=10&page=1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"entities"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "st",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all entities\n\n## EndPoint:\n\n##### /api/entities\n\n## Request query:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| limit | records number ber requset.  <br>defulte = 10 | false | number |\n| page | page number.  <br>defulte = 1 | false | number |\n| name | entity name | false | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "get entity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/entities/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities",
+								"1"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all entities\n\n## EndPoint:\n\n##### /api/entities"
@@ -510,7 +545,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"course_attendee\",\r\n    \"attribute\": [\r\n     \r\n        {\r\n            \"name\": \"studentID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"students\"\r\n        },\r\n         {\r\n            \"name\": \"courseID\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\",\r\n            \"ref\":\"course\"\r\n        },\r\n        {\r\n            \"name\": \"score\",\r\n            \"required\": true,\r\n            \"type\": \"INTEGER\"\r\n        }\r\n    ]\r\n}",
+							"raw": " {\r\n    \"name\": \"nId\",\r\n    \"required\":true,\r\n    \"type\": \"INTEGER\",\r\n    \"refId\": 1,\r\n    \"onDelete\": \"SET NULL\",\r\n    \"onUpdate\": \"SET NULL\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -526,18 +561,18 @@
 								"attributes"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create or assign new attributes to a specific entity\n\n## EndPoint:\n\n##### /api/attributes\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | lest of attributes object options | true | array |\n| type | attribute option.  <br>valid values : (  <br>STRING, INTEGER,  <br>FLOAT,  <br>DATE  <br>BOOLEAN  <br>) | true | string |\n| required | attribute option.  <br>set of this attribute will be required or not | true | boolean |\n| name | attribute option.  <br>name of the attribute | true | string |\n| ref | attribute option.  <br>name of the reference entity.  <br>used for set reference entity \"foreign Key\" | false | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create attribute\n\n## EndPoint:\n\n##### /api/attributes\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | the entity name | true | string |\n| required | required or optinal attribute | true | boolean |\n| type | attribute type | true | string |\n| refId | id of reference entity | false | number |\n| onDelete | onDelete fk | false | string |\n| onUpdate | onUpdate fk | false | string |"
 					},
 					"response": []
 				},
 				{
-					"name": "rename attribute",
+					"name": "update attributes",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"entity\": \"students\",\r\n    \"attribute\": \"Name\",\r\n    \"newName\":\"name\"\r\n}",
+							"raw": " {\r\n    // // \"name\": \"email\",\r\n    // \"required\": false,\r\n    \"type\": \"STRING\"\r\n    // \"refId\": 3\r\n    // \"onDelete\": \"SET NULL\",\r\n    // \"onUpdate\": \"SET NULL\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -545,16 +580,35 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/attributes/rename",
+							"raw": "{{url}}/attributes/5",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"attributes",
-								"rename"
+								"5"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create or assign new attributes to a specific entity\n\n## EndPoint:\n\n##### /api/attributes/rename\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | attribute name | true | string |\n| newName | new attribute name | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update attribute\n\n## EndPoint:\n\n##### /api/attributes/:id\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| name | the entity name | false | string |\n| required | required or optinal attribute | false | boolean |\n| type | attribute type | false | string |\n| refId | id of reference entity | false | number |\n| onDelete | onDelete fk | false | string |\n| onUpdate | onUpdate fk | false | string |"
+					},
+					"response": []
+				},
+				{
+					"name": "get attribute",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/attributes/6",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"attributes",
+								"6"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nget attribute by id\n\n## EndPoint:\n\n##### /api/attributes/:id\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | attribute id | true | number |"
 					},
 					"response": []
 				},
@@ -564,17 +618,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/attributes/course/courseID",
+							"raw": "{{url}}/attributes/10",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"attributes",
-								"course",
-								"courseID"
+								"10"
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete attribute from a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity/:attribute\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| attribute | attribute name | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete attribute\n\n## EndPoint:\n\n##### /api/attributes/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| id | attribute id | true | number |"
 					},
 					"response": []
 				},
@@ -584,16 +637,65 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/attributes/students",
+							"raw": "{{url}}/attributes",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"attributes",
-								"students"
+								"attributes"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "boo",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								}
 							]
 						},
-						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get attributes for a specific entity\n\n## EndPoint:\n\n##### /api/attributes/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |"
+						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get all attributes\n\n## EndPoint:\n\n##### /api/attributes\n\n## Request query:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| limit | records number ber requset.  <br>defulte = 10 | false | number |\n| page | page number.  <br>defulte = 1 | false | number |\n| name | attribute name | false | string |"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for \"Attributes\""
+		},
+		{
+			"name": "Attributes Entity",
+			"item": [
+				{
+					"name": "assign attribute to entity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"entityId\": 2,\r\n    \"attributeId\": 11\r\n   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/entities_attributes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entities_attributes"
+							]
+						},
+						"description": "## Endpoint Descriptions:\n\nassign attribute to entity\n\n## EndPoint:\n\n##### /api/entities_attributes\n\n## Request body:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entityId | ebtity id | true | number |\n| attributeId | arrtibute id | true | number |"
 					},
 					"response": []
 				}
@@ -610,7 +712,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"math\",\r\n    \"startDate\": \"2023-02-14\",\r\n    \"endDate\":\"2024-04-09\"\r\n    }",
+							"raw": "{\r\n    \"CustomerId\": 2,\r\n    \"bookId\": 1,\r\n \"startDate\": \"2023-12-04\",\r\n  \"endDate\": \"2024-12-04\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -618,13 +720,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/model/course",
+							"raw": "{{url}}/model/borrow",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"course"
+								"borrow"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for create a new record for a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
@@ -638,7 +740,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"grade\": 89,\r\n    \"birthdate\": \"2023-1-04\"\r\n}",
+							"raw": "{\r\n    \"birthdate\": \"2012-12-03\",\r\n    \"phone\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -646,14 +748,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/model/students/3",
+							"raw": "{{url}}/model/customer/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"students",
-								"3"
+								"customer",
+								"2"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for update a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |\n\n## Request body:\n\nbody will be from custom attributes created for the entity"
@@ -666,14 +768,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/students/3",
+							"raw": "{{url}}/model/borrow/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"students",
-								"3"
+								"borrow",
+								"1"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for get a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
@@ -686,13 +788,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/course_attendee?limit=2&page=2",
+							"raw": "{{url}}/model/borrow?limit=2&page=1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"course_attendee"
+								"borrow"
 							],
 							"query": [
 								{
@@ -706,7 +808,7 @@
 								},
 								{
 									"key": "page",
-									"value": "2"
+									"value": "1"
 								}
 							]
 						},
@@ -720,14 +822,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/model/course_attendee/4",
+							"raw": "{{url}}/model/customer/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"model",
-								"course_attendee",
-								"4"
+								"customer",
+								"1"
 							]
 						},
 						"description": "## Endpoint Descriptions:\n\nthis endpoint used for delete a record form a specific entity\n\n## EndPoint:\n\n##### /api/model/:entity/:id\n\n## Request param:\n\n| Field | Descriptions | required | type |\n| --- | --- | --- | --- |\n| entity | the entity name | true | string |\n| id | record ID | true | number |"
@@ -743,7 +845,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjk4NDk4Mjg5LCJleHAiOjE2OTg1ODQ2ODl9.z3Sms-_Z3Z9AsA0beAzxbPjIEFK_0UrDJLVoRGEev-M",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk4NjA2MzIyLCJleHAiOjE2OTg2OTI3MjJ9.27PcOCcEOeIqqUVtk3tpS3URHXQSmcmXaLbufW3BT6g",
 				"type": "string"
 			}
 		]

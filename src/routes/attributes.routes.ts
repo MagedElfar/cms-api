@@ -19,6 +19,12 @@ const attributesController: AttributesController = new AttributesController(
     )
 )
 
+attributesRouter.get(
+    "/",
+    validation(attributeValidation.getManySchema, "query"),
+    attributesController.getAttributesHandler.bind(attributesController)
+)
+
 
 attributesRouter.post(
     "/",
@@ -27,12 +33,24 @@ attributesRouter.post(
     attributesController.createAttributeHandler.bind(attributesController)
 )
 
-// attributesRouter.delete(
-//     "/:entity/:attribute",
-//     permissionMiddleware,
-//     validation(attributeValidation.removeAttributeSchema, "param"),
-//     attributesController.removeAttributeHandler.bind(attributesController)
-// )
+attributesRouter.put(
+    "/:id",
+    permissionMiddleware,
+    validation(attributeValidation.updateAttributeSchema),
+    attributesController.updateAttributeHandler.bind(attributesController)
+)
+
+attributesRouter.get(
+    "/:id",
+    attributesController.getAttributeHandler.bind(attributesController)
+)
+
+
+attributesRouter.delete(
+    "/:id",
+    permissionMiddleware,
+    attributesController.removeAttributeHandler.bind(attributesController)
+)
 
 // attributesRouter.put(
 //     "/rename",

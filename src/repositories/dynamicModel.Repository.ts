@@ -1,8 +1,8 @@
 import { CreateRecordDto, DeleteRecordDto, GetManyRecordDto, GetOneRecordDto, GetRecordByIdDto, UpdateRecordDto } from '../dto/dynamicModel.dto';
-import databaseConfig, { DatabaseConfig } from "../db";
 import { ILogger } from "../utility/logger";
 import { InternalServerError } from '../utility/errors';
 import DynamicModel from '../models/dynamicModel.model';
+import EntityRepository from './entity.repository';
 
 
 export interface IDynamicRepository {
@@ -16,10 +16,14 @@ export interface IDynamicRepository {
 
 export default class DynamicRepository implements IDynamicRepository {
     private readonly logger: ILogger;
+    private readonly entityRepository: EntityRepository;
+
 
     constructor(
+        entityRepository: EntityRepository,
         logger: ILogger
     ) {
+        this.entityRepository = entityRepository
         this.logger = logger
     }
 
@@ -27,7 +31,15 @@ export default class DynamicRepository implements IDynamicRepository {
     async createRecord(createRecordDto: CreateRecordDto) {
         try {
 
-            const model = new DynamicModel(createRecordDto.model).mainModel()
+            const { entity } = createRecordDto
+
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const model = dynamicModel.setModel(entity)
 
             const data = await model.create(createRecordDto.data)
 
@@ -42,7 +54,15 @@ export default class DynamicRepository implements IDynamicRepository {
     async updateRecord(updateRecordDto: UpdateRecordDto) {
         try {
 
-            const model = new DynamicModel(updateRecordDto.model).mainModel()
+            const { entity } = updateRecordDto
+
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const model = dynamicModel.setModel(entity)
 
             const [rowCount] = await model.update(updateRecordDto.data, {
                 where: { id: updateRecordDto.id }
@@ -60,9 +80,15 @@ export default class DynamicRepository implements IDynamicRepository {
 
     public async findManyRecord(getManyRecordDto: GetManyRecordDto): Promise<any> {
         try {
-            const dynamicModel = new DynamicModel(getManyRecordDto.model);
+            const { entity } = getManyRecordDto
 
-            const { model, include } = await dynamicModel.referenceModel()
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const { include, model } = await dynamicModel.mainModel()
 
             const data = await model.findAll({
                 where: getManyRecordDto.data,
@@ -87,9 +113,15 @@ export default class DynamicRepository implements IDynamicRepository {
     public async findRecordById(getRecordByIdDto: GetRecordByIdDto) {
         try {
 
-            const dynamicModel = new DynamicModel(getRecordByIdDto.model);
+            const { entity } = getRecordByIdDto
 
-            const { model, include } = await dynamicModel.referenceModel()
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const { include, model } = await dynamicModel.mainModel();
 
             const data = await model.findByPk(getRecordByIdDto.id, {
                 include
@@ -104,7 +136,15 @@ export default class DynamicRepository implements IDynamicRepository {
 
     public async findOneRecord(getOneRecordDto: GetOneRecordDto) {
         try {
-            const model = new DynamicModel(getOneRecordDto.model).mainModel()
+            const { entity } = getOneRecordDto
+
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const model = dynamicModel.setModel(entity);
 
             const data = await model.findOne({
                 where: getOneRecordDto.data
@@ -120,9 +160,15 @@ export default class DynamicRepository implements IDynamicRepository {
     public async deleteRecord(deleteRecordDto: DeleteRecordDto) {
         try {
 
-            const dynamicModel = new DynamicModel(deleteRecordDto.model);
+            const { entity } = deleteRecordDto
 
-            const model = dynamicModel.mainModel()
+            const dynamicModel = new DynamicModel(
+                entity,
+                this.logger,
+                this.entityRepository
+            )
+
+            const model = dynamicModel.setModel(entity);
 
             return await model.destroy({
                 where: { id: deleteRecordDto.id }
@@ -134,14 +180,4 @@ export default class DynamicRepository implements IDynamicRepository {
         }
     }
 
-
-
-
-    // async updateRecord(id, data) {
-    //     return sequelize.getQueryInterface().update(data, { where: { id } }, this.tableName);
-    // }
-
-    // async deleteRecord(id) {
-    //     return sequelize.getQueryInterface().delete(null, { where: { id } }, this.tableName);
-    // }
 }

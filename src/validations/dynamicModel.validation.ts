@@ -3,15 +3,14 @@ import Joi from "joi";
 
 
 function createRecordSchema(req: Request) {
-    const data = req.model.attributes
+    const data = req.entity.attributes || []
 
     let dynamicSchema = Joi.object({});
 
     data.forEach((item) => {
-        if (item.name === "id" || item.name === "updatedAt" || item.name === "createdAt") return;
 
         const key = item.name!;
-        const isRequired = !item.allowNull; // allowNull: false means required
+        const isRequired = item.required;
         let type;
 
         // Determine the Joi type based on the "type" property
@@ -34,7 +33,7 @@ function createRecordSchema(req: Request) {
 }
 
 function updateRecordSchema(req: Request) {
-    const data = req.model.attributes
+    const data = req.entity.attributes || []
 
     let dynamicSchema = Joi.object({});
 
@@ -64,7 +63,7 @@ function updateRecordSchema(req: Request) {
 }
 
 function getAllRecordSchema(req: Request) {
-    const data = req.model.attributes
+    const data = req.entity.attributes || []
 
     let dynamicSchema = Joi.object({
         page: Joi.number().min(1).optional(),
@@ -76,7 +75,6 @@ function getAllRecordSchema(req: Request) {
     });
 
     data.forEach((item) => {
-        if (item.name === "id" || item.name === "updatedAt" || item.name === "createdAt") return;
 
         const key = item.name!;
         let type;
@@ -99,8 +97,6 @@ function getAllRecordSchema(req: Request) {
 
     return dynamicSchema
 }
-
-
 
 const paramRecordSchema = Joi.object({
     entity: Joi.string().disallow('refresh_token_list', 'users').required(),

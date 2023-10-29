@@ -18,6 +18,11 @@ export default class AttributeRepository extends GenericRepository<Attribute, At
                     {
                         model: Entity,
                         attributes: ["name"],
+                        as: "entities",
+                    },
+                    {
+                        model: Entity,
+                        attributes: ["name"],
                         as: "ref",
                     },
                 ]
@@ -29,39 +34,6 @@ export default class AttributeRepository extends GenericRepository<Attribute, At
         } catch (error: any) {
             this.logger.error("database error", null, error?.stack || error?.message || error)
             throw new InternalServerError("database error")
-        }
-    }
-
-    public async findMany(getManyDto: GetManyDto): Promise<{ count: number, records: AttrAttributes[] }> {
-        try {
-            const data = await this.model.findAll({
-                where: getManyDto.data,
-                limit: getManyDto.options.limit,
-                offset: (getManyDto.options.page - 1) * getManyDto.options.limit,
-            });
-
-            const count = await this.model.count({
-                include: [
-                    {
-                        model: Entity,
-                        attributes: ["name"],
-                        as: "ref",
-                    },
-                ],
-                where: getManyDto?.data?.name ?
-                    {
-                        name: {
-                            [Op.like]: `%${getManyDto.data.name}%`
-                        }
-                    } : getManyDto.data
-            });
-
-            const records = data.map((model) => model.dataValues);
-
-            return { count, records }
-        } catch (error: any) {
-            this.logger.error("database error", null, error);
-            throw new InternalServerError("database error");
         }
     }
 

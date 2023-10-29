@@ -1,25 +1,30 @@
-import { IModel } from "../middlewares/mappedModel.middleware";
 import { DataTypes, Sequelize } from 'sequelize';
 import databaseConfig, { DatabaseConfig } from "../db";
-import AttributesServices, { IAttributesServices } from "../services/attributes.services";
-import EntitiesServices from "../services/entities.services";
-import { Logger } from "../utility/logger";
+import { ILogger, Logger } from "../utility/logger";
 import { EntityAttributes } from "./entity.model";
+import EntityRepository from "../repositories/entity.repository";
 
 export default class DynamicModel {
     private entity: EntityAttributes;
     private readonly databaseConfig: DatabaseConfig
+    private readonly logger: ILogger;
+    private readonly entityRepository: EntityRepository
 
-    constructor(entity: EntityAttributes) {
+    constructor(
+        entity: EntityAttributes,
+        logger: ILogger,
+        entityRepository: EntityRepository
+    ) {
         this.entity = entity
         this.databaseConfig = databaseConfig
-
+        this.logger = logger
+        this.entityRepository = entityRepository
     }
 
 
-    async mainModel() {
+    setModel(entity: EntityAttributes) {
 
-        const entity = this.entity;
+        const include: any[] = []
 
         const dynamicModelAttributes: any = {};
 
@@ -38,6 +43,8 @@ export default class DynamicModel {
                     type: DataTypes[attribute.type],
                     allowNull: !attribute.required
                 };
+
+
 
                 // If references exist, add a reference to another model
                 if (attribute.ref) {
@@ -58,54 +65,47 @@ export default class DynamicModel {
             updatedAt: "updatedAt", // Customize the name of the updatedAt field
         })
 
-        return { model }
+        return model;
     }
 
-    // async referenceModel() {
-    //     const model = this.mainModel();
-    //     const include: any[] = []
+    async mainModel() {
 
-    //     const logger = new Logger()
+        const model = this.setModel(this.entity);
+        const include: any[] = []
 
-    //     const attributesServices: IAttributesServices = new AttributesServices(
-    //         new EntitiesServices(logger),
-    //         logger
-    //     )
+        //foreignKey
+        if (this.entity.attributes) {
+            //foreignKey
+            await Promise.all(this.entity.attributes.map(async (attribute) => {
+                if (attribute.refId) {
 
-    //     // Create a DynamicModel for your primary model (e.g., DynamicModel)
-    //     // Loop through your data to find and define associations
-    //     await Promise.all(this.model.attributes.map(async (column) => {
-    //         if (column.references) {
-
-    //             const attributes = await attributesServices.getColumns({ entity: column.references.model })
-
-    //             const ReferencedModel = this.mainModel({
-    //                 entity: column.references.model,
-    //                 attributes
-    //             })
-
-    //             // Assuming you have a dynamic model for the referenced model
-    //             // Define the association
-    //             model.belongsTo(ReferencedModel, {
-    //                 foreignKey: column.name, // Assuming the column name matches the model name
-    //                 as: column.references.model, // Use the referenced model name as the alias
-    //                 targetKey: column.references.key,
-    //             });
-
-    //             include.push({
-    //                 model: ReferencedModel,
-    //                 as: column.references.model
-    //             })
-    //         }
-    //     }))
-
-    //     // Now, you can use the DynamicModel with dynamic associations
+                    const refEntity = await this.entityRepository.findOne({ id: attribute.refId })
 
 
-    //     return {
-    //         model,
-    //         include
-    //     }
-    // }
+                    if (!refEntity) return;
+
+                    const ReferencedModel = this.setModel(refEntity)
+
+                    // Assuming you have a dynamic model for the referenced model
+                    // Define the association
+                    model.belongsTo(ReferencedModel, {
+                        foreignKey: attribute.name, // Assuming the column name matches the model name
+                        as: refEntity.name, // Use the referenced model name as the alias
+                        targetKey: "id",
+                        onDelete: attribute.onDelete,
+                        onUpdate: attribute.onUpdate
+                    });
+
+                    include.push({
+                        model: ReferencedModel,
+                        as: refEntity.name
+                    })
+                }
+            }))
+        }
+
+
+        return { model, include }
+    }
 }
 

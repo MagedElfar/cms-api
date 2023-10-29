@@ -8,7 +8,7 @@ export interface EntityInstanceAttributes {
     entityId: number;
     attributeId: number;
     entity?: EntityAttributes;
-    attribute?: AttrAttributes
+    attribute?: AttrAttributes;
 }
 
 interface EntityInstanceCreationAttributes extends Optional<EntityInstanceAttributes, "id"> { }
@@ -39,18 +39,28 @@ EntityInstance.init(
     },
     {
         sequelize: DatabaseConfig.sequelize,
-        tableName: "role_permission",
+        tableName: "entities_attributes",
         timestamps: true, // Enable timestamps for createdAt and updatedAt
         createdAt: "createdAt", // Customize the name of the createdAt field
         updatedAt: "updatedAt", // Customize the name of the updatedAt field
     }
 );
 
-EntityInstance.belongsTo(Attribute, { as: "attribute", foreignKey: "attributeId", onDelete: "CASCADE" })
-EntityInstance.belongsTo(Entity, { as: "entity", foreignKey: "entityId", onDelete: "CASCADE" })
+EntityInstance.belongsTo(Attribute, { as: "attribute", foreignKey: "attributeId", onDelete: "CASCADE" });
+EntityInstance.belongsTo(Entity, { as: "entity", foreignKey: "entityId", onDelete: "CASCADE" });
 
-Entity.hasMany(EntityInstance, { as: "entityAttribute", foreignKey: "entityId" })
+Entity.belongsToMany(Attribute, {
+    through: EntityInstance,
+    as: "attributes",
+    foreignKey: "entityId", // Specify the correct column name for the foreign key
+    otherKey: "attributeId", // Specify the correct column name for the other key
+});
 
-Entity.belongsToMany(Attribute, { through: EntityInstance, as: "attributes" });
-Attribute.belongsToMany(Entity, { through: EntityInstance, as: "entities" });
+Attribute.belongsToMany(Entity, {
+    through: EntityInstance,
+    as: "entities",
+    foreignKey: "attributeId", // Specify the correct column name for the foreign key
+    otherKey: "entityId", // Specify the correct column name for the other key
+});
+
 export default EntityInstance;

@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../utility/responseHelpers";
 import { IAttributesServices } from "../services/attributes.services";
+import { NotFoundError } from "../utility/errors";
 
 export default class AttributesController {
 
@@ -31,53 +32,84 @@ export default class AttributesController {
 
     }
 
-    // async removeAttributeHandler(req: Request, res: Response, next: NextFunction) {
-    //     try {
+    async updateAttributeHandler(req: Request, res: Response, next: NextFunction) {
 
-    //         const { entity, attribute } = req.params
-    //         await this.attributesServices.removeAttribute({ entity, attribute });
+        try {
 
-    //         sendResponse(res, {
-    //             message: "attributes is removed successfully"
-    //         }, 200)
 
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+            const attribute = await this.attributesServices.updateAttribute({
+                ...req.body,
+                ...req.params
+            });
 
-    // async renameAttributeHandler(req: Request, res: Response, next: NextFunction) {
-    //     try {
+            sendResponse(res, {
+                message: "attributes is added successfully",
+                attribute
+            }, 201)
 
-    //         await this.attributesServices.renameAttribute(req.body);
+        } catch (error) {
+            next(error)
+        }
 
-    //         sendResponse(res, {
-    //             message: "attribute is renamed successfully"
-    //         }, 200)
+    }
 
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+    async getAttributeHandler(req: Request, res: Response, next: NextFunction) {
 
-    // async getAttributeHandler(req: Request, res: Response, next: NextFunction) {
-    //     try {
+        try {
 
-    //         const { entity } = req.params
 
-    //         const attributes = await this.attributesServices.getColumns({ entity });
+            const attribute = await this.attributesServices.getAttribute(req.params);
 
-    //         sendResponse(res, {
-    //             data: {
-    //                 entity,
-    //                 attributes
-    //             }
-    //         }, 200)
+            if (!attribute) throw new NotFoundError("attribute not found");
 
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+            sendResponse(res, {
+                attribute
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
+    async removeAttributeHandler(req: Request, res: Response, next: NextFunction) {
+        try {
+
+            const { id } = req.params
+            await this.attributesServices.deleteAttribute(+id);
+
+            sendResponse(res, {
+                message: "attributes is removed successfully"
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getAttributesHandler(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            const { limit = 10, page = 1, ...others } = req.query
+
+            const entities = await this.attributesServices.getAttributes({
+                data: others,
+                options: {
+                    limit: +limit,
+                    page: +page
+                }
+            });
+
+            sendResponse(res, {
+                entities
+            }, 200)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
 
 
 }

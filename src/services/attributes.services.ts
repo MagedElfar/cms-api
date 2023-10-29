@@ -1,17 +1,20 @@
+import { EntityAttributes } from './../models/entity.model';
 import { ILogger } from "../utility/logger";
 import databaseConfig, { DatabaseConfig } from "../db";
-import { BadRequestError, ForbiddenError, NotFoundError } from "../utility/errors";
-import { CreateAttributesDto, GetAttributeDto, RemoveAttributeDto, RenameAttributeDto } from "../dto/attributes.dto";
+import { NotFoundError } from "../utility/errors";
+import { CreateAttributesDto, UpdateAttributesDto } from "../dto/attributes.dto";
 import { IEntitiesServices } from "./entities.services";
 import AttributeRepository from "../repositories/attribute.repository";
 import { AttrAttributes } from "../models/attribute.model";
+import { DataTypes, Transaction } from 'sequelize';
+import { GetManyDto } from '../repositories/genericRepository';
 
 export interface IAttributesServices {
     createAttributes(createAttributesDto: CreateAttributesDto): Promise<AttrAttributes>
     getAttribute(attrAttributes: Partial<AttrAttributes>): Promise<AttrAttributes | null>
-    // getColumns(getAttributeDto: GetAttributeDto): Promise<IAttr[]>
-    // removeAttribute(removeAttributeDto: RemoveAttributeDto): Promise<void>
-    // renameAttribute(renameAttributeDto: RenameAttributeDto): Promise<void>
+    updateAttribute(updateAttributesDto: UpdateAttributesDto): Promise<AttrAttributes | null>
+    deleteAttribute(id: number): Promise<number>
+    getAttributes(getManyDto: GetManyDto): Promise<any>;
 }
 
 export default class AttributesServices implements IAttributesServices {
@@ -32,44 +35,13 @@ export default class AttributesServices implements IAttributesServices {
         this.databaseConfig = databaseConfig
     }
 
-    // async getColumns(getAttributeDto: GetAttributeDto) {
-    //     try {
-
-    //         const { entity: tableName } = getAttributeDto
-
-    //         const queryInterface = databaseConfig.sequelize.getQueryInterface();
-
-    //         //get column for the table
-    //         const tableDefinition = await queryInterface.describeTable(tableName);
-
-    //         //get ForeignKeyReferences For the Table
-    //         const references = await queryInterface.getForeignKeyReferencesForTable(tableName) as [];
-
-    //         const attributes: IAttr[] = Object.keys(tableDefinition).map(key => {
-    //             const attr: IAttr = {
-    //                 name: key,
-    //                 allowNull: tableDefinition[key].allowNull,
-    //                 type: tableDefinition[key].type,
-    //             }
-
-    //             const ref: any = references.find((item: any) => item?.columnName === key)
-
-    //             if (ref) {
-    //                 attr.references = {
-    //                     model: ref?.referencedTableName,
-    //                     key: ref?.referencedColumnName
-    //                 }
-    //             }
-
-    //             return attr
-    //         })
-
-    //         return attributes
-    //     } catch (error) {
-    //         console.error('Error checking for column existence:', error);
-    //         throw error;
-    //     }
-    // }
+    async getAttributes(getManyDto: GetManyDto): Promise<any> {
+        try {
+            return this.attributeRepository.findMany(getManyDto)
+        } catch (error) {
+            throw error
+        }
+    }
 
     async getAttribute(attrAttributes: Partial<AttrAttributes>): Promise<AttrAttributes | null> {
         try {
@@ -80,6 +52,93 @@ export default class AttributesServices implements IAttributesServices {
             throw error
         }
     }
+
+
+    async updateAttribute(updateAttributesDto: UpdateAttributesDto): Promise<AttrAttributes | null> {
+        const queryInterface = this.databaseConfig.sequelize.getQueryInterface();
+        const savepoint: Transaction[] = [];
+
+        try {
+            const { id, ...others } = updateAttributesDto;
+            let attribute = await this.attributeRepository.findOne({ id });
+
+            if (!attribute) throw new NotFoundError("attribute not found");
+
+
+            if (attribute?.entities) {
+                await Promise.all(attribute.entities.map(async (entity, index) => {
+                    // Continue with other operations
+                    const transaction: Transaction = await queryInterface.sequelize.transaction();
+
+                    savepoint.push(transaction);
+
+                    await queryInterface.changeColumn(
+                        entity.name,
+                        attribute?.name!,
+                        {
+                            type: DataTypes[others.type || attribute!.type],
+                            allowNull: others.required || !attribute!.required,
+                        },
+                        { transaction }
+                    );
+                }));
+
+                if (others.name && attribute?.name !== others?.name) {
+                    await Promise.all(attribute.entities.map(async (entity, index) => {
+                        if (others.name && attribute?.name !== others?.name) {
+                            // Create a savepoint
+
+                            await queryInterface.renameColumn(
+                                entity.name,
+                                others.name,
+                                others.name);
+                        }
+                    }));
+
+                }
+
+            }
+
+            const updatedAttribute = await this.attributeRepository.update(id, others);
+
+            return updatedAttribute;
+        } catch (error) {
+            // Rollback savepoints in case of an error
+            // await Promise.all(savepoint.map(async (t) => await t.rollback()));
+            throw error;
+        }
+    }
+
+    async deleteAttribute(id: number): Promise<number> {
+        const queryInterface = this.databaseConfig.sequelize.getQueryInterface();
+        const savepoint: Transaction[] = [];
+
+        try {
+            let attribute = await this.attributeRepository.findOne({ id });
+
+            if (!attribute) throw new NotFoundError("attribute not found");
+
+
+            if (attribute?.entities) {
+                await Promise.all(attribute.entities.map(async (entity, index) => {
+                    // Continue with other operations
+                    const transaction: Transaction = await queryInterface.sequelize.transaction();
+
+                    savepoint.push(transaction);
+
+                    await queryInterface.removeColumn(entity.name, attribute?.name!)
+                }))
+            }
+
+            return await this.attributeRepository.delete({ id });
+
+        } catch (error) {
+            // Rollback savepoints in case of an error
+            // await Promise.all(savepoint.map(async (t) => await t.rollback()));
+            throw error;
+        }
+    }
+
 
     async createAttributes(createAttributesDto: CreateAttributesDto): Promise<AttrAttributes> {
         try {
@@ -101,58 +160,5 @@ export default class AttributesServices implements IAttributesServices {
         }
     }
 
-    // async removeAttribute(removeAttributeDto: RemoveAttributeDto): Promise<void> {
-    //     try {
-    //         const { entity, attribute } = removeAttributeDto
-
-    //         //check if table exist in database
-    //         const tables = await this.entitiesServices.getEntities()
-    //         if (!tables.includes(entity))
-    //             throw new BadRequestError(`Entities "${entity}" is not exist`)
-
-    //         //check if column exist
-    //         const columns = await this.getColumns({ entity })
-
-    //         if (!columns.some(item => item.name === attribute))
-    //             throw new BadRequestError(`attribute "${attribute}" is not exist in this entity`);
-
-    //         const queryInterface = databaseConfig.sequelize.getQueryInterface();
-
-    //         await queryInterface.removeColumn(entity, attribute)
-
-
-    //     } catch (error) {
-    //         throw error
-    //     }
-    // }
-
-    // async renameAttribute(renameAttributeDto: RenameAttributeDto): Promise<void> {
-    //     try {
-    //         const { entity, attribute, newName } = renameAttributeDto
-
-    //         //check if table exist in database
-    //         const tables = await this.entitiesServices.getEntities()
-    //         if (!tables.includes(entity))
-    //             throw new BadRequestError(`Entities "${entity}" is not exist`)
-
-    //         const columns = await this.getColumns({ entity })
-
-    //         //check if column exist
-    //         if (!columns.some(item => item.name === attribute))
-    //             throw new BadRequestError(`attribute "${attribute}" is not exist in this entity`);
-
-    //         //check if there any other column has same name
-    //         if (columns.some(item => item.name === newName))
-    //             throw new BadRequestError(`attribute "${newName}" is already exist in this entity`);
-
-    //         const queryInterface = databaseConfig.sequelize.getQueryInterface();
-
-    //         await queryInterface.renameColumn(entity, attribute, newName)
-
-
-    //     } catch (error) {
-    //         throw error
-    //     }
-    // }
 }
 

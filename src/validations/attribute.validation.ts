@@ -38,26 +38,52 @@ const createAttributeSchema = Joi.object({
         ),
 })
 
+const updateAttributeSchema = Joi.object({
+    refId: Joi.number().optional(),
+    onDelete: Joi.string().valid(...Object.values(FK_CONSTRAINTS)).optional(),
+    onUpdate: Joi.string().valid(...Object.values(FK_CONSTRAINTS)).optional(),
+    type: Joi.string()
+        .when('refId', {
+            is: Joi.exist(),
+            then: Joi.valid(COLUMN_TYPE.integer).optional(),
+            otherwise: Joi.valid(...Object.values(COLUMN_TYPE)).optional(),
+        }),
+    required: Joi.boolean()
+        .when('ref', {
+            is: Joi.exist(),
+            then: Joi.valid(true).optional(),
+            otherwise: Joi.optional(),
+        }),
+    name: Joi.string()
+        .regex(/^[A-Za-z_]+$/)
+        .disallow('id', 'createdAt', 'updatedAt')
+        .optional()
+        .messages(
+            {
+                'string.pattern.base': 'Invalid characters in the name. Only letters, and underscores are allowed.',
 
-const removeAttributeSchema = Joi.object({
-    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
-    attribute: Joi.string().disallow('id', 'createdAt', 'updatedAt').required(),
+                'any.invalid': 'Invalid column name. "id," "createdAt," and "updatedAt" are not allowed.'
+            }
+        ),
 })
 
-const renameAttributeSchema = Joi.object({
-    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
-    attribute: Joi.string().disallow('id', 'createdAt', 'updatedAt').required(),
-    newName: Joi.string().required(),
+const getManySchema = Joi.object({
+
+    name: Joi.string().optional(),
+
+    page: Joi.number().min(1).optional(),
+    limit: Joi.number().when('page', {
+        is: Joi.exist(),
+        then: Joi.required(),
+        otherwise: Joi.optional()
+    })
+
 })
 
-const getAttributeSchema = Joi.object({
-    entity: Joi.string().disallow('refresh_token_list', 'users').required(),
-})
 
 
 export {
     createAttributeSchema,
-    removeAttributeSchema,
-    getAttributeSchema,
-    renameAttributeSchema
+    updateAttributeSchema,
+    getManySchema
 }

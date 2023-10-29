@@ -18,12 +18,12 @@ export class DynamicModelController {
             const data = await this.dynamicModelServices
                 .createRecord(
                     {
-                        model: req.model,
+                        entity: req.entity,
                         data: req.body
                     }
                 )
             sendResponse(res, {
-                message: `new record is added successfully from '${req.model.entity}' entity`,
+                message: `new record is added successfully from '${req.entity.name}' entity`,
                 data
             }, 201)
 
@@ -41,13 +41,13 @@ export class DynamicModelController {
             const data = await this.dynamicModelServices
                 .updateRecord(
                     {
-                        model: req.model,
+                        entity: req.entity,
                         data: req.body,
                         id: +id
                     }
                 )
             sendResponse(res, {
-                message: `record updated successfully in '${req.model.entity}' entity`,
+                message: `record updated successfully in '${req.entity.name}' entity`,
                 data
             }, 200)
 
@@ -66,7 +66,7 @@ export class DynamicModelController {
             const data = await this.dynamicModelServices
                 .getManyRecords(
                     {
-                        model: req.model,
+                        entity: req.entity,
                         data: others,
                         options: {
                             limit: +limit,
@@ -75,7 +75,7 @@ export class DynamicModelController {
                     }
                 )
             sendResponse(res, {
-                message: `get records from '${req.model.entity}' entity`,
+                message: `get records from '${req.entity.name}' entity`,
                 data
             }, 200)
 
@@ -93,12 +93,12 @@ export class DynamicModelController {
             const data = await this.dynamicModelServices
                 .getRecordById(
                     {
-                        model: req.model,
+                        entity: req.entity,
                         id: +id
                     }
                 )
             sendResponse(res, {
-                message: `get record from '${req.model.entity}' entity`,
+                message: `get record from '${req.entity.name}' entity`,
                 data
             }, 200)
 
@@ -117,12 +117,12 @@ export class DynamicModelController {
             await this.dynamicModelServices
                 .deleteRecord(
                     {
-                        model: req.model,
+                        entity: req.entity,
                         id: +id
                     }
                 )
             sendResponse(res, {
-                message: `delete record from '${req.model.entity}' entity`,
+                message: `delete record from '${req.entity.name}' entity`,
             }, 200)
 
         } catch (error) {

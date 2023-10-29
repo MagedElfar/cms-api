@@ -2,6 +2,7 @@ import DataBase from "./index"
 import { QueryInterface } from "sequelize";
 import DatabaseConfig from "./../db"
 import { InternalServerError } from "../utility/errors";
+import { Logger } from "../utility/logger";
 
 
 // Get the existing indexes for the model from the database
@@ -67,6 +68,23 @@ async function removeIndexes(queryInterface: QueryInterface, tableName: string) 
 //     }
 // }
 
+
+export async function checkModelModelMigration(model: any) {
+    try {
+        // Check the User model's migration without actually applying it
+        await model.sync({ force: false });
+    } catch (error: any) {
+        const logger = new Logger()
+
+        logger.error(`migration error with ${model} model`, null, {
+            error: error.message
+        })
+    } finally {
+        const sequelize = DatabaseConfig.sequelize;
+        await sequelize.close();
+    }
+}
+
 export async function migration(models: any[]) {
     try {
         await DataBase.testConnection();
@@ -79,6 +97,7 @@ export async function migration(models: any[]) {
                 await model.sync({ alter: true });
                 console.log(`${table} table created successfully!`);
             } catch (error: any) {
+                console.log(error)
                 console.error(`Error creating table : ${table} with error : ${error}`);
                 throw new InternalServerError(error);
             }

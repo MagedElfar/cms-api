@@ -16,8 +16,7 @@ router.use("/users", authMiddleware.authenticate, userRoutes)
 router.use("/entities", authMiddleware.authenticate, entitiesRouter)
 router.use("/attributes", authMiddleware.authenticate, attributesRouter)
 router.use("/entities_attributes", authMiddleware.authenticate, permissionMiddleware, entityInstanceRouter)
-
-// router.use("/model", authMiddleware.authenticate, dynamicModelRouter)
+router.use("/model", authMiddleware.authenticate, dynamicModelRouter)
 router.use("/*", unHandelRouter)
 
 export default router;
