@@ -135,7 +135,7 @@ export default class AttributesServices implements IAttributesServices {
 
         } catch (error) {
             // Rollback savepoints in case of an error
-            // await Promise.all(savepoint.map(async (t) => await t.rollback()));
+            await Promise.all(savepoint.map(async (t) => await t.rollback()));
             throw error;
         }
     }
