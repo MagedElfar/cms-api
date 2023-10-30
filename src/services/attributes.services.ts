@@ -131,7 +131,12 @@ export default class AttributesServices implements IAttributesServices {
                 }))
             }
 
-            return await this.attributeRepository.delete({ id });
+
+            const attr = await this.attributeRepository.delete({ id });
+
+            await Promise.all(savepoint.map(async (t) => await t.commit()));
+
+            return attr;
 
         } catch (error) {
             // Rollback savepoints in case of an error
