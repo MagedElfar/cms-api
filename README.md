@@ -60,7 +60,7 @@ PORT: require port for running app ex: 5000.
 
 ENCRYPTION_KEY: key used for ENCRYPTION process in system "it depended on ENCRYPTION algorithm"
 
-test ENCRYPTION_KEY ex: 0f4f6baad4efb4bb7b144e1bf5ca7066.
+test ENCRYPTION_KEY ex: 0f4f6baad4efb4bb7b144e1bf5ca7066
 
 DB_DATABASE: Database name.
 
