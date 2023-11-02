@@ -17,7 +17,7 @@
     "types": ["index.d.ts"]
   },
 
-  "include": ["src/**/*.ts", "./../test/**/*.ts"],
+  "include": ["src/**/*.ts", "./../test/**/*.ts", "src/db/migrations/20231102041235-users.js", "src/db/migrations/20231102041422-create-refresh-token.js", "src/db/migrations/20231102041659-create-entity.js", "src/db/migrations/20231102041806-create-attribute.js", "src/db/migrations/20231102042006-create-entity-instance.js"],
   "exclude": [
     "node_modules"
   ]

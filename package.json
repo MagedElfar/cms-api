@@ -38,6 +38,7 @@
     "mocha-watch": "^0.1.0",
     "nodemon": "^3.0.1",
     "npm": "^9.8.1",
+    "sequelize-cli": "^6.6.1",
     "sinon": "^15.2.0",
     "supertest": "^6.3.3",
     "ts-mocha": "^10.0.0",

@@ -51,7 +51,7 @@ $ npm start
 script to run database migration
 
 ```bash
-$ npm run migration
+$ npx sequelize-cli db:migrate --url "mysql://username:password@host/database" --migrations-path "src/db/migrations"
 ```
 
 ## Environment Variables
