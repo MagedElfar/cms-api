@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "migration": "nodemon src/migration.ts"
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
